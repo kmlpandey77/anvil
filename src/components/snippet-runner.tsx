@@ -31,7 +31,10 @@ export function SnippetRunner({ product }: { product: Product }) {
 
   const extensions = useMemo(
     () => [
-      php(),
+      // plain: true — snippets are raw PHP with no <?php tag, not a
+      // template file. Without it the parser expects HTML and never
+      // recognizes any PHP tokens, so nothing gets highlighted.
+      php({ plain: true }),
       autocompletion({
         override: [
           makeMemberCompletionSource(product.id, symbols.classes),
