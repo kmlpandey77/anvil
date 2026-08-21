@@ -91,7 +91,8 @@ export function makeMemberCompletionSource(
         apply: m.kind === "method" ? `${m.name}()` : m.name,
       }));
       return { from, options };
-    } catch {
+    } catch (e) {
+      console.error(`list_members(${fqcn}) failed:`, e);
       return null;
     }
   };

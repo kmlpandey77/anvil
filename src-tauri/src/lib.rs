@@ -237,8 +237,12 @@ fn list_symbols(app: AppHandle, product_id: String) -> Result<Symbols, String> {
 
     // vendor/autoload.php just registers Composer's PSR-4 autoloader and
     // returns the ClassLoader — it does not boot Laravel or touch the DB.
+    // ob_start/ob_end_clean: any notice/deprecation warning PHP prints while
+    // autoloading (common on real projects, e.g. PHP 8.1+ deprecations) would
+    // otherwise land before our JSON on stdout and break parsing on the Rust
+    // side — this guarantees stdout is exactly the JSON we echo, nothing else.
     let script = format!(
-        "<?php\n$loader = require {:?};\necho json_encode(['psr4' => $loader->getPrefixesPsr4(), 'functions' => get_defined_functions()['internal']]);\n",
+        "<?php\nob_start();\n$loader = require {:?};\n$output = json_encode(['psr4' => $loader->getPrefixesPsr4(), 'functions' => get_defined_functions()['internal']]);\nob_end_clean();\necho $output;\n",
         autoload.to_string_lossy(),
     );
 
@@ -298,38 +302,42 @@ fn list_members(app: AppHandle, product_id: String, class_name: String) -> Resul
     // @property/@method docblock tags (e.g. from `php artisan ide-helper:models`)
     // are picked up too, since we read them straight off the class via reflection —
     // no dependency on the ide-helper package itself, just its output format.
+    // ob_start/ob_end_clean: same reasoning as list_symbols — autoloading a real
+    // project's classes can print notices/deprecations that would otherwise
+    // corrupt the JSON on stdout.
     let script = format!(
         r#"<?php
+ob_start();
 require {autoload:?};
 $name = {class_name:?};
-if (!class_exists($name) && !interface_exists($name) && !trait_exists($name)) {{
-    echo json_encode(['members' => []]);
-    exit;
-}}
-$class = new ReflectionClass($name);
 $members = [];
-foreach ($class->getMethods(ReflectionMethod::IS_PUBLIC) as $m) {{
-    if ($m->isConstructor() || $m->isDestructor()) continue;
-    $members[] = ['name' => $m->getName(), 'kind' => 'method', 'is_static' => $m->isStatic()];
-}}
-foreach ($class->getProperties(ReflectionProperty::IS_PUBLIC) as $p) {{
-    $members[] = ['name' => $p->getName(), 'kind' => 'property', 'is_static' => $p->isStatic()];
-}}
-$doc = '';
-for ($c = $class; $c; $c = $c->getParentClass()) {{
-    $doc .= ($c->getDocComment() ?: '') . "\n";
-}}
-if (preg_match_all('/@property(?:-read|-write)?\s+\S+\s+\$(\w+)/', $doc, $m1)) {{
-    foreach ($m1[1] as $propName) {{
-        $members[] = ['name' => $propName, 'kind' => 'property', 'is_static' => false];
+if (class_exists($name) || interface_exists($name) || trait_exists($name)) {{
+    $class = new ReflectionClass($name);
+    foreach ($class->getMethods(ReflectionMethod::IS_PUBLIC) as $m) {{
+        if ($m->isConstructor() || $m->isDestructor()) continue;
+        $members[] = ['name' => $m->getName(), 'kind' => 'method', 'is_static' => $m->isStatic()];
+    }}
+    foreach ($class->getProperties(ReflectionProperty::IS_PUBLIC) as $p) {{
+        $members[] = ['name' => $p->getName(), 'kind' => 'property', 'is_static' => $p->isStatic()];
+    }}
+    $doc = '';
+    for ($c = $class; $c; $c = $c->getParentClass()) {{
+        $doc .= ($c->getDocComment() ?: '') . "\n";
+    }}
+    if (preg_match_all('/@property(?:-read|-write)?\s+\S+\s+\$(\w+)/', $doc, $m1)) {{
+        foreach ($m1[1] as $propName) {{
+            $members[] = ['name' => $propName, 'kind' => 'property', 'is_static' => false];
+        }}
+    }}
+    if (preg_match_all('/@method\s+(?:static\s+)?\S+\s+(\w+)\s*\(/', $doc, $m2)) {{
+        foreach ($m2[1] as $methodName) {{
+            $members[] = ['name' => $methodName, 'kind' => 'method', 'is_static' => false];
+        }}
     }}
 }}
-if (preg_match_all('/@method\s+(?:static\s+)?\S+\s+(\w+)\s*\(/', $doc, $m2)) {{
-    foreach ($m2[1] as $methodName) {{
-        $members[] = ['name' => $methodName, 'kind' => 'method', 'is_static' => false];
-    }}
-}}
-echo json_encode(['members' => $members]);
+$output = json_encode(['members' => $members]);
+ob_end_clean();
+echo $output;
 "#,
         autoload = autoload.to_string_lossy(),
         class_name = class_name,
