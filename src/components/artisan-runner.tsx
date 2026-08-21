@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -17,6 +17,7 @@ export function ArtisanRunner({ product }: { product: Product }) {
   const [args, setArgs] = useState("");
   const [result, setResult] = useState<RunResult | null>(null);
   const [running, setRunning] = useState(false);
+  const argsRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setCommands([]);
@@ -57,14 +58,18 @@ export function ArtisanRunner({ product }: { product: Product }) {
       <div className="flex w-1/2 flex-col overflow-hidden">
         <div className="flex items-center gap-2 border-b p-3">
           <Input
+            ref={argsRef}
             placeholder={selected ? `${selected} arguments / options` : "Select a command below"}
             value={args}
             onChange={(e) => setArgs(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && selected && !running) run();
+            }}
             disabled={!selected}
           />
           <StatusDot status={status} />
           <Button size="sm" onClick={run} disabled={!selected || running}>
-            {running ? "Running…" : "Run"}
+            {running ? "Running…" : "Run (⏎)"}
           </Button>
         </div>
         <div className="p-3 pb-0">
@@ -79,7 +84,10 @@ export function ArtisanRunner({ product }: { product: Product }) {
             {filtered.map((c) => (
               <button
                 key={c.name}
-                onClick={() => setSelected(c.name)}
+                onClick={() => {
+                  setSelected(c.name);
+                  argsRef.current?.focus();
+                }}
                 className={cn(
                   "rounded-md px-2 py-1.5 text-left text-sm hover:bg-accent",
                   selected === c.name && "bg-accent",
