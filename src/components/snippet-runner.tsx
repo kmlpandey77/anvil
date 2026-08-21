@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import CodeMirror from "@uiw/react-codemirror";
 import { php } from "@codemirror/lang-php";
 import { autocompletion } from "@codemirror/autocomplete";
+import { EditorView } from "@codemirror/view";
 import { Button } from "@/components/ui/button";
 import { runSnippet, type RunResult } from "@/lib/run";
 import {
@@ -10,6 +11,7 @@ import {
   makeMemberCompletionSource,
   type Symbols,
 } from "@/lib/symbols";
+import { useEditorSettings } from "@/lib/settings";
 import type { Product } from "@/lib/products";
 import { toast } from "sonner";
 
@@ -21,6 +23,7 @@ export function SnippetRunner({ product }: { product: Product }) {
   const [result, setResult] = useState<RunResult | null>(null);
   const [running, setRunning] = useState(false);
   const [symbols, setSymbols] = useState<Symbols>(EMPTY_SYMBOLS);
+  const { fontSize, fontFamily } = useEditorSettings();
 
   useEffect(() => {
     setSymbols(EMPTY_SYMBOLS);
@@ -41,8 +44,12 @@ export function SnippetRunner({ product }: { product: Product }) {
           makeCompletionSource(symbols),
         ],
       }),
+      EditorView.theme({
+        "&": { fontSize: `${fontSize}px` },
+        ".cm-content, .cm-gutters": { fontFamily },
+      }),
     ],
-    [product.id, symbols],
+    [product.id, symbols, fontSize, fontFamily],
   );
 
   async function run() {

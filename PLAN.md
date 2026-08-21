@@ -67,6 +67,7 @@ type Product = {
 3. ✅ **Run snippet**: `run_snippet` Rust command, bootstrap temp file, CodeMirror editor + Run button (⌘Enter), stdout/stderr panel.
 4. ✅ **Autocomplete**: `list_symbols` Rust command (PSR-4 class walk + built-in functions) + CodeMirror completion source.
 5. ✅ **Member completion**: `list_members` Rust command (reflection + docblock parsing) + `::`/`->` triggers.
-6. **Polish** (only if actually needed after using it): multiple tabs per product, keyboard shortcuts beyond ⌘Enter, richer error states.
+6. ✅ **Settings**: theme (light/dark/system via `next-themes`, already a shadcn-init dependency) + editor font size/family, persisted in `localStorage` (per-viewer UI preference, not project data — doesn't belong in the Rust-backed `products.json`).
+7. **Polish** (only if actually needed after using it): multiple tabs per product, keyboard shortcuts beyond ⌘Enter, richer error states.
 
 Each milestone should be a working app, not a stub.

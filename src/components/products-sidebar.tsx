@@ -13,6 +13,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { AddProductDialog } from "@/components/add-product-dialog";
+import { SettingsDialog } from "@/components/settings-dialog";
 import { removeProduct, type Product } from "@/lib/products";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
@@ -41,8 +42,11 @@ export function ProductsSidebar({
 
   return (
     <div className="flex h-full w-64 flex-col border-r">
-      <div className="p-3">
-        <AddProductDialog onAdded={onAdded} />
+      <div className="flex items-center gap-2 p-3">
+        <div className="flex-1">
+          <AddProductDialog onAdded={onAdded} />
+        </div>
+        <SettingsDialog />
       </div>
       <ScrollArea className="flex-1">
         <div className="flex flex-col gap-1 px-3 pb-3">
