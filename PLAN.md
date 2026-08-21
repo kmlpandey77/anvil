@@ -70,6 +70,12 @@ Frontend renders Tinker's stdout in a sandboxed `<iframe sandbox="allow-scripts"
 
 Verified the whole pipeline end to end before wiring up the frontend: confirmed `VAR_DUMPER_FORMAT=html` actually forces HTML output for a plain `php` CLI process (a standalone `symfony/var-dumper` fixture), then again through the full `bootstrap_header` + Kernel-boot path (a fake Laravel project fixture, same pattern used for `run_snippet` originally), then visually in a real browser against a captured real `dump()` HTML sample — including clicking the collapse/expand arrow to confirm the sandboxed script actually runs.
 
+### .env editor — shipped
+
+`read_env`/`write_env`: plain `fs::read_to_string`/`fs::write` against `{path}/.env` — no PHP execution involved at all (unlike almost everything else in this app), so the risk profile is low enough that it didn't need the fixture-based verification the PHP-script commands got. Missing `.env` (fresh checkout) reads as an empty string rather than erroring, so the editor just opens empty and Save creates the file — no separate "create" flow.
+
+New "env" nav section (`EnvEditor`) — plain Monaco editor (`language="ini"`, close enough to `KEY=VALUE` + `#` comments for reasonable highlighting; Monaco has no dedicated dotenv mode), Save (⌘S) disabled until dirty, Reload discards local edits and re-fetches.
+
 ## Tech stack
 
 - **Shell**: Tauri v2 (Rust backend, plain `std::process::Command` for spawning `php` — no shell plugin needed, we're not running arbitrary shell commands).
@@ -104,6 +110,7 @@ type Product = {
 9. ✅ **Snippet history**: `snippets.json` in the app data dir (same pattern as `products.json`), keyed by product — save/load/delete named snippets from the Tinker section.
 10. ✅ **Navigation redesign**: card-grid landing page (`ProjectsHome`) + icon-only nav rail per selected product (`WorkspaceNav`: Tinker/Artisan/Logs), replacing the always-visible product sidebar + top `Tabs` bar. Tinker and Artisan restructured into two columns (code/input left, result right). DB/table browser removed.
 11. ✅ **Beautiful dd()-style output**: `VAR_DUMPER_FORMAT=html` + `dump()` instead of `var_dump()`, rendered in a sandboxed iframe on the Tinker section only.
-12. **Polish** (only if actually needed after using it): keyboard shortcuts beyond ⌘Enter, richer error states.
+12. ✅ **.env editor**: `read_env`/`write_env` (plain file I/O, no PHP), new "env" nav section.
+13. **Polish** (only if actually needed after using it): keyboard shortcuts beyond ⌘Enter, richer error states.
 
 Each milestone should be a working app, not a stub.

@@ -557,6 +557,27 @@ fn read_log_tail(app: AppHandle, product_id: String) -> Result<String, String> {
     Ok(String::from_utf8_lossy(&buf).to_string())
 }
 
+fn env_path(product: &Product) -> PathBuf {
+    PathBuf::from(&product.path).join(".env")
+}
+
+#[tauri::command]
+fn read_env(app: AppHandle, product_id: String) -> Result<String, String> {
+    let product = find_product(&app, &product_id)?;
+    let path = env_path(&product);
+    if !path.is_file() {
+        // No .env yet (fresh checkout) — open empty, Save will create it.
+        return Ok(String::new());
+    }
+    fs::read_to_string(&path).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+fn write_env(app: AppHandle, product_id: String, content: String) -> Result<(), String> {
+    let product = find_product(&app, &product_id)?;
+    fs::write(env_path(&product), content).map_err(|e| e.to_string())
+}
+
 #[cfg(test)]
 mod tests {
     use super::{collect_classes, newest_log_file, wrap_snippet};
@@ -628,7 +649,9 @@ pub fn run() {
             read_log_tail,
             list_snippets,
             save_snippet,
-            delete_snippet
+            delete_snippet,
+            read_env,
+            write_env
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

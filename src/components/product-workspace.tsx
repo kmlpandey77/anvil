@@ -3,6 +3,7 @@ import { WorkspaceNav, type WorkspaceSection } from "@/components/workspace-nav"
 import { SnippetRunner } from "@/components/snippet-runner";
 import { ArtisanRunner } from "@/components/artisan-runner";
 import { LogViewer } from "@/components/log-viewer";
+import { EnvEditor } from "@/components/env-editor";
 import type { Product } from "@/lib/products";
 
 export function ProductWorkspace({
@@ -25,6 +26,7 @@ export function ProductWorkspace({
           {section === "tinker" && <SnippetRunner product={product} />}
           {section === "artisan" && <ArtisanRunner product={product} />}
           {section === "logs" && <LogViewer product={product} />}
+          {section === "env" && <EnvEditor product={product} />}
         </div>
       </div>
     </div>

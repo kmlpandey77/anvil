@@ -1,14 +1,15 @@
-import { ArrowLeft, Code2, ScrollText, Terminal } from "lucide-react";
+import { ArrowLeft, Code2, KeyRound, ScrollText, Terminal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SettingsDialog } from "@/components/settings-dialog";
 import { cn } from "@/lib/utils";
 
-export type WorkspaceSection = "tinker" | "artisan" | "logs";
+export type WorkspaceSection = "tinker" | "artisan" | "logs" | "env";
 
 const SECTIONS: { id: WorkspaceSection; label: string; icon: typeof Code2 }[] = [
   { id: "tinker", label: "Tinker", icon: Code2 },
   { id: "artisan", label: "Artisan", icon: Terminal },
   { id: "logs", label: "Logs", icon: ScrollText },
+  { id: "env", label: ".env", icon: KeyRound },
 ];
 
 export function WorkspaceNav({
