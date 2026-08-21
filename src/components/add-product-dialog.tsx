@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { open } from "@tauri-apps/plugin-dialog";
 import {
   Dialog,
@@ -16,8 +16,10 @@ import { toast } from "sonner";
 
 export function AddProductDialog({
   onAdded,
+  trigger,
 }: {
   onAdded: (product: Product) => void;
+  trigger?: ReactNode;
 }) {
   const [open_, setOpen] = useState(false);
   const [name, setName] = useState("");
@@ -68,9 +70,11 @@ export function AddProductDialog({
       }}
     >
       <DialogTrigger asChild>
-        <Button variant="outline" className="w-full">
-          + Add product
-        </Button>
+        {trigger ?? (
+          <Button variant="outline" className="w-full">
+            + Add product
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

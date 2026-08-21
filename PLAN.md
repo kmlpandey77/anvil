@@ -10,9 +10,10 @@ Tauri + React + shadcn/ui desktop app for running PHP/Laravel snippets against r
 4. **Member completion** — after `Class::` or `$var->` (where `$var` was assigned via `$var = new Class(`), suggest real public methods/properties via PHP reflection, plus `@property`/`@method` docblock tags (picked up automatically if the project has run `php artisan ide-helper:models` — no dependency on the package itself, just its output format). ✅ shipped
 
 5. **Artisan runner** — list the project's real `artisan` commands and run one, output shown the same way as a snippet. ✅ shipped
-6. **Log tailing** — poll `storage/logs/*.log` and show the tail, while the Logs tab is open. ✅ shipped
-7. **DB/table browser** — run raw SQL through the project's configured Laravel DB connection, results rendered as a table instead of a `var_dump` blob. ✅ shipped
-8. **Snippet history** — save/load/delete named snippets per product. ✅ shipped
+6. **Log tailing** — poll `storage/logs/*.log` and show the tail, while the Logs section is open. ✅ shipped
+7. **Snippet history** — save/load/delete named snippets per product. ✅ shipped
+
+A DB/table browser (`run_query`, `DB::select`) shipped and was then **removed** on request — not a fit for the product's direction. If it comes back, the design (bootstrap the Kernel like `run_snippet`, `serde_json`'s `preserve_order` feature for column ordering, guard SQL to `select`-only) is preserved in git history (the commit that added it, and the one that removed it).
 
 Explicitly out of scope: SSH/remote/Docker connections, multi-environment products, XDebug, AI chat, team/sharing, and any Laravel-version compatibility checker (dropped — not needed). Add later only if actually needed.
 
@@ -46,12 +47,20 @@ Same "reuse the real project" philosophy as running code — no bundled PHP lang
 - Frontend trigger (`registerPhpCompletionProviders` in `src/lib/symbols.ts`, registered against Monaco's `languages.registerCompletionItemProvider('php', ...)`): matches `Class::` (resolves `Class` against known project classes by exact/short-name, else passes through as-is so fully-qualified vendor classes like `\Illuminate\Support\Str` still work) or `$var->` (resolved only via a backward regex scan for `$var = new ClassName(` earlier in the same buffer — not real type inference, so `User::first()->` chains won't resolve).
 - Deliberately not built this pass: parsing ide-helper's separate `_ide_helper.php`/`_ide_helper_models.php` helper files (a different, more complex nested-namespace format than inline docblocks) — would add Facade method completion (`Route::`, `DB::`) but wasn't worth the extra parser yet. Natural next step if facades turn out to matter.
 
-### Artisan runner, log tailing, DB browser — shipped
+### Artisan runner, log tailing, snippet history — shipped
 
 - `list_artisan_commands`/`run_artisan_command`: shell out to the project's own `artisan` (`list --format=json` is Symfony Console's built-in JSON descriptor, verified against a real `symfony/console` app before trusting the shape). `run_artisan_command` takes freeform args (split on whitespace client-side).
-- `read_log_tail`: picks the most recently modified `*.log` in `storage/logs` (default single file or the "daily" driver's rotated files), seeks to the last 100KB rather than loading the whole file. Frontend polls every 2s while the Logs tab is mounted — Radix `Tabs` unmounts inactive content by default, so polling stops on its own when you switch away.
-- `run_query`: boots the Kernel like `run_snippet`, runs `DB::select($sql)`, returns rows as `{ columns, rows }` for a real `<Table>` instead of a `var_dump` blob. `serde_json`'s `preserve_order` feature is enabled — its `Map` is a `BTreeMap` by default (alphabetical!) which would silently reorder columns away from the SELECT order; caught by a unit test before it shipped. Guarded (client message, not a real security boundary) to SQL starting with `select` — anything else belongs in the Tinker tab.
-- Snippet history: `snippets.json` in the app data dir, same read/write-whole-file pattern as `products.json` — `list_snippets`/`save_snippet`/`delete_snippet`, filtered by `product_id`. A popover on the Tinker tab (`SnippetHistory`) lists saved snippets for the current product, loads one into the editor on click, and can save the current buffer under a name.
+- `read_log_tail`: picks the most recently modified `*.log` in `storage/logs` (default single file or the "daily" driver's rotated files), seeks to the last 100KB rather than loading the whole file. Frontend polls every 2s while the Logs section is mounted (conditionally rendered in `product-workspace.tsx`, so switching sections unmounts it and polling stops on its own).
+- Snippet history: `snippets.json` in the app data dir, same read/write-whole-file pattern as `products.json` — `list_snippets`/`save_snippet`/`delete_snippet`, filtered by `product_id`. A popover on the Tinker section (`SnippetHistory`) lists saved snippets for the current product, loads one into the editor on click, and can save the current buffer under a name.
+
+### Navigation redesign — shipped
+
+Replaced the always-visible product-list sidebar + `Tabs` bar with two distinct screens:
+
+- **Landing page** (`ProjectsHome`, shown when no product is selected): a card grid of every saved product plus an "Add new project" card (reuses `AddProductDialog` with a custom `trigger` prop instead of its default button).
+- **Workspace** (`ProductWorkspace`, shown once a product is selected): a `w-14` icon-only nav rail (`WorkspaceNav`) — back-to-projects arrow, Tinker/Artisan/Logs icons, Settings at the bottom — next to the active section's content. Sections are plain conditional rendering (`section === 'tinker' && <SnippetRunner />`), not `Tabs`, so switching sections unmounts the inactive one same as before.
+- Tinker and Artisan both moved from a stacked (editor-on-top, output-below) layout to two columns side by side — `RunResultPanel` changed from `max-h-64` (bottom strip) to `h-full border-l` (right column) and now accepts `result: RunResult | null` directly, rendering a "Run to see output" placeholder instead of being conditionally omitted.
+- Caught one real layout bug via a mocked-Tauri browser test before considering this done: `ProductWorkspace`'s root `<div>` had no `w-full`/`flex-1`, so as a flex item of `<main>` it shrank to fit its content instead of filling the screen — the whole workspace rendered in a ~380px strip with everything else black. One-line fix (`w-full` on the root div).
 
 ## Tech stack
 
@@ -82,12 +91,10 @@ type Product = {
 4. ✅ **Autocomplete**: `list_symbols` Rust command (PSR-4 class walk + built-in functions) + CodeMirror completion source.
 5. ✅ **Member completion**: `list_members` Rust command (reflection + docblock parsing) + `::`/`->` triggers.
 6. ✅ **Settings**: theme (light/dark/system via `next-themes`, already a shadcn-init dependency) + editor font size/family, persisted in `localStorage` (per-viewer UI preference, not project data — doesn't belong in the Rust-backed `products.json`).
-7. ✅ **Artisan runner**: `list_artisan_commands` (`php artisan list --format=json`) + `run_artisan_command`, a new "Artisan" tab.
-8. ✅ **Log tailing**: `read_log_tail` (find newest `storage/logs/*.log`, read its tail), frontend polls every ~2s while the "Logs" tab is open — no filesystem-watcher plugin, polling is simpler and good enough for a log viewer.
-9. ✅ **DB/table browser**: `run_query` (boots the Kernel like `run_snippet`, runs `DB::select($sql)`, returns rows as JSON), a new "Database" tab renders them as an actual table. SQL only (no arbitrary PHP) — that's the point of the tab.
-10. ✅ **Snippet history**: `snippets.json` in the app data dir (same pattern as `products.json`), keyed by product — save/load/delete named snippets from the Tinker tab.
+7. ✅ **Artisan runner**: `list_artisan_commands` (`php artisan list --format=json`) + `run_artisan_command`, a new "Artisan" section.
+8. ✅ **Log tailing**: `read_log_tail` (find newest `storage/logs/*.log`, read its tail), frontend polls every ~2s while the Logs section is mounted.
+9. ✅ **Snippet history**: `snippets.json` in the app data dir (same pattern as `products.json`), keyed by product — save/load/delete named snippets from the Tinker section.
+10. ✅ **Navigation redesign**: card-grid landing page (`ProjectsHome`) + icon-only nav rail per selected product (`WorkspaceNav`: Tinker/Artisan/Logs), replacing the always-visible product sidebar + top `Tabs` bar. Tinker and Artisan restructured into two columns (code/input left, result right). DB/table browser removed.
 11. **Polish** (only if actually needed after using it): keyboard shortcuts beyond ⌘Enter, richer error states.
-
-Main pane becomes a `Tabs` bar per product: Tinker | Artisan | Logs | Database.
 
 Each milestone should be a working app, not a stub.

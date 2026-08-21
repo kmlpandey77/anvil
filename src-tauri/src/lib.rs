@@ -218,7 +218,7 @@ fn exec_php(product: &Product, script: &str) -> Result<RunResult, String> {
 }
 
 // Shared by any command that needs the app's service container (DB config,
-// Eloquent, etc.) rather than just the autoloader — run_snippet, run_query.
+// Eloquent, etc.) rather than just the autoloader — run_snippet.
 fn bootstrap_header(product: &Product) -> Result<String, String> {
     let project_path = PathBuf::from(&product.path);
     let autoload = project_path.join("vendor/autoload.php");
@@ -549,86 +549,9 @@ fn read_log_tail(app: AppHandle, product_id: String) -> Result<String, String> {
     Ok(String::from_utf8_lossy(&buf).to_string())
 }
 
-#[derive(Debug, Serialize)]
-struct QueryResult {
-    columns: Vec<String>,
-    rows: Vec<Vec<String>>,
-}
-
-fn json_cell_to_string(value: &serde_json::Value) -> String {
-    match value {
-        serde_json::Value::Null => "NULL".to_string(),
-        serde_json::Value::String(s) => s.clone(),
-        serde_json::Value::Bool(b) => b.to_string(),
-        other => other.to_string(),
-    }
-}
-
-// Rows come back as a JSON array of objects (one per DB row); columns are
-// the union of keys across all rows, in first-seen order, so a NULL-only
-// column in the first row doesn't get silently dropped.
-fn rows_to_table(rows: &[serde_json::Map<String, serde_json::Value>]) -> QueryResult {
-    let mut columns: Vec<String> = Vec::new();
-    for row in rows {
-        for key in row.keys() {
-            if !columns.contains(key) {
-                columns.push(key.clone());
-            }
-        }
-    }
-    let table_rows = rows
-        .iter()
-        .map(|row| {
-            columns
-                .iter()
-                .map(|c| row.get(c).map(json_cell_to_string).unwrap_or_default())
-                .collect()
-        })
-        .collect();
-    QueryResult {
-        columns,
-        rows: table_rows,
-    }
-}
-
-#[tauri::command]
-fn run_query(app: AppHandle, product_id: String, sql: String) -> Result<QueryResult, String> {
-    let product = find_product(&app, &product_id)?;
-    let header = bootstrap_header(&product)?;
-
-    let trimmed = sql.trim();
-    if !trimmed.to_lowercase().starts_with("select") {
-        return Err(
-            "Only SELECT queries are supported here — use the Tinker tab for anything else."
-                .to_string(),
-        );
-    }
-
-    // ob_start/ob_end_clean: booting the full app has far more surface area
-    // for a stray notice/deprecation warning on stdout than the lightweight
-    // autoload-only scripts (list_symbols, list_members) — same fix as those.
-    let script = format!(
-        "<?php\n{header}\nob_start();\n$__rows = DB::select({sql:?});\n$__output = json_encode(array_map(fn($row) => (array) $row, $__rows));\nob_end_clean();\necho $__output;\n",
-    );
-
-    let result = exec_php(&product, &script)?;
-    if !result.success {
-        return Err(if result.stderr.is_empty() {
-            result.stdout
-        } else {
-            result.stderr
-        });
-    }
-
-    let rows: Vec<serde_json::Map<String, serde_json::Value>> =
-        serde_json::from_str(&result.stdout).map_err(|e| format!("could not parse query result: {e}"))?;
-
-    Ok(rows_to_table(&rows))
-}
-
 #[cfg(test)]
 mod tests {
-    use super::{collect_classes, newest_log_file, rows_to_table, wrap_snippet};
+    use super::{collect_classes, newest_log_file, wrap_snippet};
 
     #[test]
     fn wraps_simple_expressions() {
@@ -678,23 +601,6 @@ mod tests {
         assert_eq!(picked.file_name().unwrap(), "laravel-2024-01-02.log");
         std::fs::remove_dir_all(&dir).unwrap();
     }
-
-    #[test]
-    fn rows_to_table_unions_columns_and_stringifies_cells() {
-        let rows: Vec<serde_json::Map<String, serde_json::Value>> = serde_json::from_str(
-            r#"[
-                {"id": 1, "name": "Alice", "deleted_at": null},
-                {"id": 2, "name": "Bob", "active": true}
-            ]"#,
-        )
-        .unwrap();
-
-        let table = rows_to_table(&rows);
-
-        assert_eq!(table.columns, vec!["id", "name", "deleted_at", "active"]);
-        assert_eq!(table.rows[0], vec!["1", "Alice", "NULL", ""]);
-        assert_eq!(table.rows[1], vec!["2", "Bob", "", "true"]);
-    }
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -712,7 +618,6 @@ pub fn run() {
             list_artisan_commands,
             run_artisan_command,
             read_log_tail,
-            run_query,
             list_snippets,
             save_snippet,
             delete_snippet

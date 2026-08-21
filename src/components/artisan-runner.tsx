@@ -45,8 +45,19 @@ export function ArtisanRunner({ product }: { product: Product }) {
 
   return (
     <div className="flex h-full">
-      <div className="flex w-72 flex-col border-r">
-        <div className="p-3">
+      <div className="flex w-1/2 flex-col overflow-hidden">
+        <div className="flex items-center gap-2 border-b p-3">
+          <Input
+            placeholder={selected ? `${selected} arguments / options` : "Select a command below"}
+            value={args}
+            onChange={(e) => setArgs(e.target.value)}
+            disabled={!selected}
+          />
+          <Button size="sm" onClick={run} disabled={!selected || running}>
+            {running ? "Running…" : "Run"}
+          </Button>
+        </div>
+        <div className="p-3 pb-0">
           <Input
             placeholder="Filter commands…"
             value={filter}
@@ -54,7 +65,7 @@ export function ArtisanRunner({ product }: { product: Product }) {
           />
         </div>
         <ScrollArea className="flex-1">
-          <div className="flex flex-col gap-0.5 px-3 pb-3">
+          <div className="flex flex-col gap-0.5 p-3">
             {filtered.map((c) => (
               <button
                 key={c.name}
@@ -78,24 +89,8 @@ export function ArtisanRunner({ product }: { product: Product }) {
           </div>
         </ScrollArea>
       </div>
-      <div className="flex flex-1 flex-col">
-        <div className="flex items-center gap-2 border-b px-4 py-2">
-          <span className="flex-1 font-mono text-sm">
-            {selected ?? "Select a command"}
-          </span>
-          <Input
-            placeholder="arguments / options"
-            value={args}
-            onChange={(e) => setArgs(e.target.value)}
-            disabled={!selected}
-            className="max-w-xs"
-          />
-          <Button size="sm" onClick={run} disabled={!selected || running}>
-            {running ? "Running…" : "Run"}
-          </Button>
-        </div>
-        <div className="flex-1 overflow-auto" />
-        {result && <RunResultPanel result={result} />}
+      <div className="w-1/2">
+        <RunResultPanel result={result} />
       </div>
     </div>
   );

@@ -67,22 +67,26 @@ export function SnippetRunner({ product }: { product: Product }) {
           {running ? "Running…" : "Run (⌘⏎)"}
         </Button>
       </div>
-      <div className="flex-1 overflow-hidden">
-        <Editor
-          language="php"
-          value={code}
-          onChange={(value) => setCode(value ?? "")}
-          onMount={handleMount}
-          theme={resolvedTheme === "dark" ? "vs-dark" : "vs"}
-          options={{
-            fontSize,
-            fontFamily,
-            minimap: { enabled: false },
-            automaticLayout: true,
-          }}
-        />
+      <div className="flex flex-1 overflow-hidden">
+        <div className="w-1/2 overflow-hidden">
+          <Editor
+            language="php"
+            value={code}
+            onChange={(value) => setCode(value ?? "")}
+            onMount={handleMount}
+            theme={resolvedTheme === "dark" ? "vs-dark" : "vs"}
+            options={{
+              fontSize,
+              fontFamily,
+              minimap: { enabled: false },
+              automaticLayout: true,
+            }}
+          />
+        </div>
+        <div className="w-1/2">
+          <RunResultPanel result={result} />
+        </div>
       </div>
-      {result && <RunResultPanel result={result} />}
     </div>
   );
 }
