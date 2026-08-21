@@ -4,7 +4,12 @@ import { php } from "@codemirror/lang-php";
 import { autocompletion } from "@codemirror/autocomplete";
 import { Button } from "@/components/ui/button";
 import { runSnippet, type RunResult } from "@/lib/run";
-import { listSymbols, makeCompletionSource, type Symbols } from "@/lib/symbols";
+import {
+  listSymbols,
+  makeCompletionSource,
+  makeMemberCompletionSource,
+  type Symbols,
+} from "@/lib/symbols";
 import type { Product } from "@/lib/products";
 import { toast } from "sonner";
 
@@ -25,8 +30,16 @@ export function SnippetRunner({ product }: { product: Product }) {
   }, [product.id]);
 
   const extensions = useMemo(
-    () => [php(), autocompletion({ override: [makeCompletionSource(symbols)] })],
-    [symbols],
+    () => [
+      php(),
+      autocompletion({
+        override: [
+          makeMemberCompletionSource(product.id, symbols.classes),
+          makeCompletionSource(symbols),
+        ],
+      }),
+    ],
+    [product.id, symbols],
   );
 
   async function run() {

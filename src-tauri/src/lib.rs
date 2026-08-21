@@ -268,6 +268,87 @@ fn list_symbols(app: AppHandle, product_id: String) -> Result<Symbols, String> {
     })
 }
 
+#[derive(Debug, Serialize, Deserialize)]
+struct Members {
+    members: Vec<Member>,
+}
+
+#[derive(Debug, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
+struct Member {
+    name: String,
+    kind: String, // "method" | "property"
+    is_static: bool,
+}
+
+#[tauri::command]
+fn list_members(app: AppHandle, product_id: String, class_name: String) -> Result<Members, String> {
+    let product = find_product(&app, &product_id)?;
+
+    let project_path = PathBuf::from(&product.path);
+    let autoload = project_path.join("vendor/autoload.php");
+    if !autoload.is_file() {
+        return Err(format!(
+            "vendor/autoload.php not found — run composer install in {}",
+            product.path
+        ));
+    }
+
+    // Reflection only — doesn't boot Laravel, so Facade aliases (Route:: without
+    // the full namespace) won't resolve here even though they work at run time.
+    // @property/@method docblock tags (e.g. from `php artisan ide-helper:models`)
+    // are picked up too, since we read them straight off the class via reflection —
+    // no dependency on the ide-helper package itself, just its output format.
+    let script = format!(
+        r#"<?php
+require {autoload:?};
+$name = {class_name:?};
+if (!class_exists($name) && !interface_exists($name) && !trait_exists($name)) {{
+    echo json_encode(['members' => []]);
+    exit;
+}}
+$class = new ReflectionClass($name);
+$members = [];
+foreach ($class->getMethods(ReflectionMethod::IS_PUBLIC) as $m) {{
+    if ($m->isConstructor() || $m->isDestructor()) continue;
+    $members[] = ['name' => $m->getName(), 'kind' => 'method', 'is_static' => $m->isStatic()];
+}}
+foreach ($class->getProperties(ReflectionProperty::IS_PUBLIC) as $p) {{
+    $members[] = ['name' => $p->getName(), 'kind' => 'property', 'is_static' => $p->isStatic()];
+}}
+$doc = '';
+for ($c = $class; $c; $c = $c->getParentClass()) {{
+    $doc .= ($c->getDocComment() ?: '') . "\n";
+}}
+if (preg_match_all('/@property(?:-read|-write)?\s+\S+\s+\$(\w+)/', $doc, $m1)) {{
+    foreach ($m1[1] as $propName) {{
+        $members[] = ['name' => $propName, 'kind' => 'property', 'is_static' => false];
+    }}
+}}
+if (preg_match_all('/@method\s+(?:static\s+)?\S+\s+(\w+)\s*\(/', $doc, $m2)) {{
+    foreach ($m2[1] as $methodName) {{
+        $members[] = ['name' => $methodName, 'kind' => 'method', 'is_static' => false];
+    }}
+}}
+echo json_encode(['members' => $members]);
+"#,
+        autoload = autoload.to_string_lossy(),
+        class_name = class_name,
+    );
+
+    let result = exec_php(&product, &script)?;
+    if !result.success {
+        return Err(if result.stderr.is_empty() { result.stdout } else { result.stderr });
+    }
+
+    let mut members: Vec<Member> = serde_json::from_str::<Members>(&result.stdout)
+        .map_err(|e| format!("could not parse reflection output: {e}"))?
+        .members;
+    members.sort();
+    members.dedup();
+
+    Ok(Members { members })
+}
+
 #[cfg(test)]
 mod tests {
     use super::{collect_classes, wrap_snippet};
@@ -317,7 +398,8 @@ pub fn run() {
             add_product,
             remove_product,
             run_snippet,
-            list_symbols
+            list_symbols,
+            list_members
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

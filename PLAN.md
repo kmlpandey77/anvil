@@ -6,7 +6,8 @@ Tauri + React + shadcn/ui desktop app for running PHP/Laravel snippets against r
 
 1. **Projects ("products")** — save a connection to a local Laravel app (path only). Switch between them. Run PHP code inside that project's booted context. ✅ shipped
 2. **REPL / scratchpad** — write PHP, run it, see the result (value, echo/dump output, errors) inline. ✅ shipped
-3. **Autocomplete** — as you type, suggest PHP keywords/built-in functions plus the connected project's own classes (`App\Models\User`, etc.), pulled from the real project, not a static guess. 🚧 in progress
+3. **Autocomplete** — as you type, suggest PHP keywords/built-in functions plus the connected project's own classes (`App\Models\User`, etc.), pulled from the real project, not a static guess. ✅ shipped
+4. **Member completion** — after `Class::` or `$var->` (where `$var` was assigned via `$var = new Class(`), suggest real public methods/properties via PHP reflection, plus `@property`/`@method` docblock tags (picked up automatically if the project has run `php artisan ide-helper:models` — no dependency on the package itself, just its output format). ✅ shipped
 
 Explicitly out of scope: SSH/remote/Docker connections, multi-environment products, XDebug, AI chat, log tailing, table mode, snippets library, themes, team/sharing, and any Laravel-version compatibility checker (dropped — not needed). Add later only if actually needed.
 
@@ -33,7 +34,12 @@ Same "reuse the real project" philosophy as running code — no bundled PHP lang
   3. Returns `{ classes: string[], functions: string[] }` to the frontend.
 - Frontend caches this per selected product (fetched once on selection, not per keystroke).
 - A CodeMirror `autocompletion()` source merges: a small hardcoded PHP keyword list, the project's built-in function names, and its class names (inserted fully-qualified, since a REPL snippet has no persistent `use` imports).
-- Explicitly out of scope for this pass: member/method completion after `->` or `::` (would need real static analysis or an LSP — the natural upgrade path if this isn't enough later).
+
+### Member completion — shipped
+
+- New Rust command `list_members(product_id, class_name)`: same autoload-only bootstrap as `list_symbols` (no Kernel boot — so Facade aliases like `Route::` without the full namespace won't resolve here, even though they'd work at run time), then `ReflectionClass` for real public methods/properties, plus a regex pass over the class's own docblock (and its parents') for `@property`/`@property-read`/`@property-write`/`@method` tags. This is exactly the format `php artisan ide-helper:models --write` writes into model files — we just read it, no dependency on `barryvdh/laravel-ide-helper` itself required, but the project benefits automatically if it's used.
+- Frontend trigger (`makeMemberCompletionSource` in `src/lib/symbols.ts`): matches `Class::` (resolves `Class` against known project classes by exact/short-name, else passes through as-is so fully-qualified vendor classes like `\Illuminate\Support\Str` still work) or `$var->` (resolved only via a backward regex scan for `$var = new ClassName(` earlier in the same buffer — not real type inference, so `User::first()->` chains won't resolve).
+- Deliberately not built this pass: parsing ide-helper's separate `_ide_helper.php`/`_ide_helper_models.php` helper files (a different, more complex nested-namespace format than inline docblocks) — would add Facade method completion (`Route::`, `DB::`) but wasn't worth the extra parser yet. Natural next step if facades turn out to matter.
 
 ## Tech stack
 
@@ -59,7 +65,8 @@ type Product = {
 1. ✅ **Scaffold**: Tauri (React-TS) + Tailwind v4 + shadcn/ui (Radix/Nova).
 2. ✅ **Product CRUD**: add/list/remove products, persisted to `products.json`. Folder picker + `artisan` validation.
 3. ✅ **Run snippet**: `run_snippet` Rust command, bootstrap temp file, CodeMirror editor + Run button (⌘Enter), stdout/stderr panel.
-4. 🚧 **Autocomplete**: `list_symbols` Rust command (PSR-4 class walk + built-in functions) + CodeMirror completion source. See above for the design.
-5. **Polish** (only if actually needed after using it): multiple tabs per product, keyboard shortcuts beyond ⌘Enter, richer error states.
+4. ✅ **Autocomplete**: `list_symbols` Rust command (PSR-4 class walk + built-in functions) + CodeMirror completion source.
+5. ✅ **Member completion**: `list_members` Rust command (reflection + docblock parsing) + `::`/`->` triggers.
+6. **Polish** (only if actually needed after using it): multiple tabs per product, keyboard shortcuts beyond ⌘Enter, richer error states.
 
 Each milestone should be a working app, not a stub.
