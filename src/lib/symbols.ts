@@ -1,5 +1,5 @@
 import { invoke } from "@tauri-apps/api/core";
-import type { Completion, CompletionContext, CompletionSource } from "@codemirror/autocomplete";
+import type * as Monaco from "monaco-editor";
 
 export type Symbols = {
   classes: string[];
@@ -8,27 +8,6 @@ export type Symbols = {
 
 export function listSymbols(productId: string): Promise<Symbols> {
   return invoke("list_symbols", { productId });
-}
-
-// Fully-qualified since a REPL snippet has no persistent `use` imports.
-export function makeCompletionSource(symbols: Symbols): CompletionSource {
-  const options: Completion[] = [
-    ...PHP_KEYWORDS.map((label): Completion => ({ label, type: "keyword" })),
-    ...symbols.functions.map((label): Completion => ({ label, type: "function" })),
-    ...symbols.classes.map(
-      (label): Completion => ({
-        label,
-        type: "class",
-        apply: label.startsWith("\\") ? label : `\\${label}`,
-      }),
-    ),
-  ];
-
-  return (context: CompletionContext) => {
-    const word = context.matchBefore(/[\\\w]+/);
-    if (!word || (word.from === word.to && !context.explicit)) return null;
-    return { from: word.from, options, validFor: /^[\\\w]*$/ };
-  };
 }
 
 export type Member = { name: string; kind: "method" | "property"; is_static: boolean };
@@ -48,53 +27,112 @@ function resolveClassName(typed: string, classes: string[]): string {
   return match ?? clean;
 }
 
-// Member completion after `Class::` or after `$var->` where `$var` was
-// assigned via `$var = new ClassName(` earlier in the buffer — a simple
-// backward regex scan, not real type inference, so chained calls like
-// `User::first()->` won't resolve. See PLAN.md for the upgrade path.
-export function makeMemberCompletionSource(
+// Replace range for the run of `pattern` chars immediately before the cursor
+// on the current line — used instead of Monaco's own getWordUntilPosition
+// because its default word pattern doesn't include `\`, which would leave a
+// leading backslash duplicated when inserting a fully-qualified class name.
+function backwardRange(
+  model: Monaco.editor.ITextModel,
+  position: Monaco.Position,
+  pattern: RegExp,
+): Monaco.IRange {
+  const lineText = model.getLineContent(position.lineNumber).slice(0, position.column - 1);
+  const m = pattern.exec(lineText);
+  const startColumn = m ? position.column - m[0].length : position.column;
+  return {
+    startLineNumber: position.lineNumber,
+    endLineNumber: position.lineNumber,
+    startColumn,
+    endColumn: position.column,
+  };
+}
+
+type BaseItem = { label: string; kind: Monaco.languages.CompletionItemKind; insertText: string };
+
+function buildGeneralItems(monacoNs: typeof Monaco, symbols: Symbols): BaseItem[] {
+  const Kind = monacoNs.languages.CompletionItemKind;
+  return [
+    ...PHP_KEYWORDS.map((label): BaseItem => ({ label, kind: Kind.Keyword, insertText: label })),
+    ...symbols.functions.map((label): BaseItem => ({ label, kind: Kind.Function, insertText: label })),
+    ...symbols.classes.map(
+      (label): BaseItem => ({
+        label,
+        kind: Kind.Class,
+        insertText: label.startsWith("\\") ? label : `\\${label}`,
+      }),
+    ),
+  ];
+}
+
+// Registers PHP completion against Monaco's global 'php' language registry
+// (registerCompletionItemProvider is process-wide, not per-editor-instance).
+// Returns a dispose function — callers MUST call it before re-registering
+// (e.g. when `symbols` changes) or providers stack and suggestions duplicate.
+export function registerPhpCompletionProviders(
+  monacoNs: typeof Monaco,
   productId: string,
-  classes: string[],
-): CompletionSource {
-  return async (context: CompletionContext) => {
-    const staticMatch = context.matchBefore(/(\\?[\w\\]+)::(\w*)$/);
-    const instanceMatch = context.matchBefore(/\$(\w+)->(\w*)$/);
+  symbols: Symbols,
+): () => void {
+  const generalItems = buildGeneralItems(monacoNs, symbols);
 
-    let className: string | undefined;
-    let from: number;
+  const general = monacoNs.languages.registerCompletionItemProvider("php", {
+    triggerCharacters: ["\\", "$"],
+    provideCompletionItems(model, position) {
+      const range = backwardRange(model, position, /[\\\w]*$/);
+      return { suggestions: generalItems.map((item) => ({ ...item, range })) };
+    },
+  });
 
-    if (staticMatch) {
-      const m = /^(\\?[\w\\]+)::(\w*)$/.exec(staticMatch.text)!;
-      className = m[1];
-      from = staticMatch.from + m[0].length - m[2].length;
-    } else if (instanceMatch) {
-      const m = /^\$(\w+)->(\w*)$/.exec(instanceMatch.text)!;
-      const varName = m[1];
-      const doc = context.state.doc.toString();
-      const assignRe = new RegExp(`\\$${varName}\\s*=\\s*new\\s+(\\\\?[\\w\\\\]+)\\s*\\(`, "g");
-      let match: RegExpExecArray | null;
-      let last: RegExpExecArray | null = null;
-      while ((match = assignRe.exec(doc))) last = match;
-      if (!last) return null;
-      className = last[1];
-      from = instanceMatch.from + m[0].length - m[2].length;
-    } else {
-      return null;
-    }
+  // Member completion after `Class::` or `$var->` where `$var` was assigned
+  // via `$var = new ClassName(` earlier in the buffer — a simple backward
+  // regex scan, not real type inference, so chained calls like
+  // `User::first()->` won't resolve. See PLAN.md for the upgrade path.
+  const member = monacoNs.languages.registerCompletionItemProvider("php", {
+    triggerCharacters: [":", "-", ">"],
+    async provideCompletionItems(model, position) {
+      const lineUntilCursor = model.getLineContent(position.lineNumber).slice(0, position.column - 1);
+      const staticMatch = /(\\?[\w\\]+)::(\w*)$/.exec(lineUntilCursor);
+      const instanceMatch = /\$(\w+)->(\w*)$/.exec(lineUntilCursor);
 
-    const fqcn = resolveClassName(className, classes);
-    try {
-      const { members } = await listMembers(productId, fqcn);
-      const options: Completion[] = members.map((m) => ({
-        label: m.name,
-        type: m.kind,
-        apply: m.kind === "method" ? `${m.name}()` : m.name,
-      }));
-      return { from, options };
-    } catch (e) {
-      console.error(`list_members(${fqcn}) failed:`, e);
-      return null;
-    }
+      let className: string | undefined;
+      if (staticMatch) {
+        className = staticMatch[1];
+      } else if (instanceMatch) {
+        const varName = instanceMatch[1];
+        const doc = model.getValue();
+        const assignRe = new RegExp(`\\$${varName}\\s*=\\s*new\\s+(\\\\?[\\w\\\\]+)\\s*\\(`, "g");
+        let match: RegExpExecArray | null;
+        let last: RegExpExecArray | null = null;
+        while ((match = assignRe.exec(doc))) last = match;
+        if (!last) return { suggestions: [] };
+        className = last[1];
+      } else {
+        return { suggestions: [] };
+      }
+
+      const fqcn = resolveClassName(className, symbols.classes);
+      try {
+        const { members } = await listMembers(productId, fqcn);
+        const range = backwardRange(model, position, /\w*$/);
+        const Kind = monacoNs.languages.CompletionItemKind;
+        return {
+          suggestions: members.map((m) => ({
+            label: m.name,
+            kind: m.kind === "method" ? Kind.Method : Kind.Property,
+            insertText: m.kind === "method" ? `${m.name}()` : m.name,
+            range,
+          })),
+        };
+      } catch (e) {
+        console.error(`list_members(${fqcn}) failed:`, e);
+        return { suggestions: [] };
+      }
+    },
+  });
+
+  return () => {
+    general.dispose();
+    member.dispose();
   };
 }
 
