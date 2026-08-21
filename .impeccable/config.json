@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "design-system-radius",
+        "value": "9999px",
+        "files": [
+          "src/index.css"
+        ],
+        "createdAt": "2026-08-21T08:47:04.376Z",
+        "reason": "standard CSS pill-radius idiom for the scrollbar thumb, already used elsewhere (scroll-area.tsx rounded-full); DESIGN.md's rounded scale will gain a 'full' token when rewritten at finish"
+      }
+    ]
+  }
+}

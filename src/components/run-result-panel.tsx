@@ -10,8 +10,13 @@ import type { RunResult } from "@/lib/run";
 // Tinker, where stdout is either dump() output or plain echoed text (both
 // render fine inside the iframe body).
 function iframeDoc(stdout: string, dark: boolean): string {
-  const bg = dark ? "#0a0a0a" : "#ffffff";
-  const fg = dark ? "#e5e5e5" : "#111111";
+  // Matches index.css's --background/--foreground for this theme (a separate
+  // document can't read the app's CSS variables, so the hex is duplicated by
+  // hand here) — Symfony's own sf-dump box carries its own near-black/orange
+  // styling regardless, this only sets what shows around it and behind plain
+  // echoed text.
+  const bg = dark ? "#241a3d" : "#faf8fd";
+  const fg = dark ? "#e9e4f5" : "#221a3a";
   return `<!doctype html><html><head><meta charset="utf-8"><style>
     body { margin: 0; padding: 12px; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 12px; background: ${bg}; color: ${fg}; }
   </style></head><body>${stdout}</body></html>`;

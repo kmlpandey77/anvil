@@ -3,6 +3,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { RunResultPanel } from "@/components/run-result-panel";
+import { StatusDot, type RunStatus } from "@/components/status-dot";
 import { listArtisanCommands, runArtisanCommand, type ArtisanCommand } from "@/lib/artisan";
 import type { RunResult } from "@/lib/run";
 import type { Product } from "@/lib/products";
@@ -30,6 +31,14 @@ export function ArtisanRunner({ product }: { product: Product }) {
     c.name.toLowerCase().includes(filter.toLowerCase()),
   );
 
+  const status: RunStatus = running
+    ? "running"
+    : result
+      ? result.success
+        ? "success"
+        : "error"
+      : "idle";
+
   async function run() {
     if (!selected) return;
     setRunning(true);
@@ -53,6 +62,7 @@ export function ArtisanRunner({ product }: { product: Product }) {
             onChange={(e) => setArgs(e.target.value)}
             disabled={!selected}
           />
+          <StatusDot status={status} />
           <Button size="sm" onClick={run} disabled={!selected || running}>
             {running ? "Running…" : "Run"}
           </Button>

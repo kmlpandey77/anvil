@@ -5,6 +5,7 @@ import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
 import { RunResultPanel } from "@/components/run-result-panel";
 import { SnippetHistory } from "@/components/snippet-history";
+import { StatusDot, type RunStatus } from "@/components/status-dot";
 import { runSnippet, type RunResult } from "@/lib/run";
 import { listSymbols, registerPhpCompletionProviders, type Symbols } from "@/lib/symbols";
 import { useEditorSettings } from "@/lib/settings";
@@ -53,6 +54,14 @@ export function SnippetRunner({ product }: { product: Product }) {
   }
   runRef.current = run;
 
+  const status: RunStatus = running
+    ? "running"
+    : result
+      ? result.success
+        ? "success"
+        : "error"
+      : "idle";
+
   const handleMount: OnMount = (editor, monacoNs) => {
     monacoRef.current = monacoNs;
     editor.addCommand(monacoNs.KeyMod.CtrlCmd | monacoNs.KeyCode.Enter, () => runRef.current());
@@ -63,9 +72,12 @@ export function SnippetRunner({ product }: { product: Product }) {
     <div className="flex h-full flex-col">
       <div className="flex items-center justify-between border-b px-4 py-2">
         <SnippetHistory product={product} code={code} onLoad={setCode} />
-        <Button size="sm" onClick={run} disabled={running}>
-          {running ? "Running…" : "Run (⌘⏎)"}
-        </Button>
+        <div className="flex items-center gap-2.5">
+          <StatusDot status={status} />
+          <Button size="sm" onClick={run} disabled={running}>
+            {running ? "Running…" : "Run (⌘⏎)"}
+          </Button>
+        </div>
       </div>
       <div className="flex flex-1 overflow-hidden">
         <div className="w-1/2 overflow-hidden">
@@ -74,7 +86,7 @@ export function SnippetRunner({ product }: { product: Product }) {
             value={code}
             onChange={(value) => setCode(value ?? "")}
             onMount={handleMount}
-            theme={resolvedTheme === "dark" ? "vs-dark" : "vs"}
+            theme={resolvedTheme === "dark" ? "ray-dark" : "ray-light"}
             options={{
               fontSize,
               fontFamily,

@@ -111,6 +111,7 @@ type Product = {
 10. ✅ **Navigation redesign**: card-grid landing page (`ProjectsHome`) + icon-only nav rail per selected product (`WorkspaceNav`: Tinker/Artisan/Logs), replacing the always-visible product sidebar + top `Tabs` bar. Tinker and Artisan restructured into two columns (code/input left, result right). DB/table browser removed.
 11. ✅ **Beautiful dd()-style output**: `VAR_DUMPER_FORMAT=html` + `dump()` instead of `var_dump()`, rendered in a sandboxed iframe on the Tinker section only.
 12. ✅ **.env editor**: `read_env`/`write_env` (plain file I/O, no PHP), new "env" nav section.
-13. **Polish** (only if actually needed after using it): keyboard shortcuts beyond ⌘Enter, richer error states.
+13. ✅ **Visual redesign — "The Ray Console"**: replaced the pure-grayscale shadcn-defaults look with a violet-ground + one-orange-accent system, pinned by explicit user reference to Ray (Spatie's Laravel debug-output app). Real offset-blur shadows on cards/popovers/dropdowns (modals kept ring-only on purpose), a softer 16px-base radius scale, custom Monaco themes matching the new ground, and a new status-dot component (idle/running/success/error) borrowed from Ray's own log-feed motif. Visuals only — zero behavior/layout changes, per explicit user constraint. Full rationale and token values in `DESIGN.md`.
+14. **Polish** (only if actually needed after using it): keyboard shortcuts beyond ⌘Enter, richer error states.
 
 Each milestone should be a working app, not a stub.

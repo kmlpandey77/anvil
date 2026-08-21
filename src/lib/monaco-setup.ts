@@ -36,4 +36,47 @@ monaco.languages.setMonarchTokensProvider("php", {
   tokenizer: { ...phpLanguage.tokenizer, root: phpLanguage.tokenizer.phpRoot },
 });
 
+// Editor chrome themed to match index.css's violet ground — token/syntax
+// colors are left to inherit from the vs/vs-dark base (rules: []) since
+// Monaco's own defaults already read fine against this background; only the
+// surrounding UI (background, cursor, selection, suggest widget) is retheme.
+monaco.editor.defineTheme("ray-dark", {
+  base: "vs-dark",
+  inherit: true,
+  rules: [],
+  colors: {
+    "editor.background": "#241a3d",
+    "editor.foreground": "#e9e4f5",
+    "editorLineNumber.foreground": "#6b5d94",
+    "editorLineNumber.activeForeground": "#e9e4f5",
+    "editorCursor.foreground": "#ff8a4c",
+    "editor.selectionBackground": "#4a3570",
+    "editor.lineHighlightBackground": "#2c2050",
+    "editorWidget.background": "#2c2050",
+    "editorWidget.border": "#4a3570",
+    "editorSuggestWidget.background": "#2c2050",
+    "editorSuggestWidget.border": "#4a3570",
+    "editorSuggestWidget.selectedBackground": "#3d2d63",
+  },
+});
+monaco.editor.defineTheme("ray-light", {
+  base: "vs",
+  inherit: true,
+  rules: [],
+  colors: {
+    "editor.background": "#faf8fd",
+    "editor.foreground": "#221a3a",
+    "editorLineNumber.foreground": "#b3a8cf",
+    "editorLineNumber.activeForeground": "#221a3a",
+    "editorCursor.foreground": "#c2540f",
+    "editor.selectionBackground": "#e5dbf5",
+    "editor.lineHighlightBackground": "#f2edf9",
+    "editorWidget.background": "#ffffff",
+    "editorWidget.border": "#e0d5f0",
+    "editorSuggestWidget.background": "#ffffff",
+    "editorSuggestWidget.border": "#e0d5f0",
+    "editorSuggestWidget.selectedBackground": "#f2edf9",
+  },
+});
+
 loader.config({ monaco });

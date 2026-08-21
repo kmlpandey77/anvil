@@ -1,17 +1,17 @@
 ---
 name: Laravel Toolkit
-description: A bare, monochrome desktop tool for running PHP against real local Laravel projects
+description: A violet-and-orange debug console pinned to Ray by Spatie's real visual language
 colors:
-  ink: "oklch(0.205 0 0)"
-  ink-foreground: "oklch(0.985 0 0)"
-  paper: "oklch(1 0 0)"
-  paper-foreground: "oklch(0.145 0 0)"
-  fog: "oklch(0.97 0 0)"
-  fog-foreground: "oklch(0.205 0 0)"
-  slate: "oklch(0.556 0 0)"
-  hairline: "oklch(0.922 0 0)"
-  steel: "oklch(0.708 0 0)"
-  signal-red: "oklch(0.577 0.245 27.325)"
+  violet-ink: "oklch(0.16 0.032 296)"
+  violet-paper: "oklch(0.975 0.012 296)"
+  violet-card: "oklch(0.21 0.04 296)"
+  violet-card-light: "oklch(0.995 0.003 296)"
+  violet-popover: "oklch(0.24 0.044 296)"
+  ray-orange: "oklch(0.72 0.19 42)"
+  ray-orange-light: "oklch(0.64 0.19 41)"
+  ember-red: "oklch(0.66 0.22 21)"
+  violet-border: "oklch(1 0 0 / 10%)"
+  violet-muted: "oklch(0.7 0.035 296)"
 typography:
   title:
     fontFamily: "'Geist Variable', sans-serif"
@@ -29,11 +29,11 @@ typography:
     fontWeight: 400
     lineHeight: "1.4"
 rounded:
-  sm: "6px"
-  md: "8px"
-  lg: "10px"
-  xl: "14px"
-  2xl: "18px"
+  sm: "9.6px"
+  md: "12.8px"
+  lg: "16px"
+  xl: "22.4px"
+  full: "9999px"
 spacing:
   xs: "4px"
   sm: "8px"
@@ -41,34 +41,29 @@ spacing:
   lg: "24px"
 components:
   button-primary:
-    backgroundColor: "{colors.ink}"
-    textColor: "{colors.ink-foreground}"
+    backgroundColor: "{colors.ray-orange}"
+    textColor: "{colors.violet-ink}"
     rounded: "{rounded.lg}"
     height: "32px"
   button-outline:
-    backgroundColor: "{colors.paper}"
-    textColor: "{colors.paper-foreground}"
-    rounded: "{rounded.lg}"
-    height: "32px"
-  button-ghost:
-    backgroundColor: "transparent"
-    textColor: "{colors.paper-foreground}"
+    backgroundColor: "{colors.violet-card}"
+    textColor: "{colors.violet-paper}"
     rounded: "{rounded.lg}"
     height: "32px"
   button-destructive:
-    backgroundColor: "color-mix(in oklch, {colors.signal-red}, transparent 90%)"
-    textColor: "{colors.signal-red}"
+    backgroundColor: "color-mix(in oklch, {colors.ember-red}, transparent 85%)"
+    textColor: "{colors.ember-red}"
     rounded: "{rounded.lg}"
     height: "32px"
   input:
     backgroundColor: "transparent"
-    textColor: "{colors.paper-foreground}"
+    textColor: "{colors.violet-paper}"
     rounded: "{rounded.lg}"
     height: "32px"
     padding: "4px 10px"
   card:
-    backgroundColor: "{colors.paper}"
-    textColor: "{colors.paper-foreground}"
+    backgroundColor: "{colors.violet-card}"
+    textColor: "{colors.violet-paper}"
     rounded: "{rounded.xl}"
     padding: "16px"
 ---
@@ -77,145 +72,87 @@ components:
 
 ## Overview
 
-**Creative North Star: "The Bare Terminal"**
+**Creative North Star: "The Ray Console"**
 
-No accent color has been chosen. This is deliberate, not unfinished: the interface is a monochrome instrument for reading PHP output and moving between a handful of tools, and any color would compete with the one thing that actually needs it — the syntax-highlighted editor and the `dd()`-style dump output at the center of the screen. The system runs on shadcn/ui's stock "Nova" style with a neutral base color, unmodified. That is itself the choice: reach for a customized palette only when a real reason to differentiate shows up, not by default.
+Pinned by explicit user reference to [Ray](https://myray.app), Spatie's Laravel debug-output desktop app — the closest possible analog to this app's own `dd()`/`dump()` output, built by one of the most respected Laravel package authors. Verified against Ray's live marketing site and its real in-app dump feed (screenshot-sampled directly, not recalled from memory) before writing a single token here. Replaces "The Bare Terminal," the previous pure-grayscale-shadcn-defaults system, in full.
 
-Density is tight and utilitarian — an icon-only 56px nav rail, 32px controls, 12–14px text almost everywhere. Surfaces sit flat at rest; the only depth cue is a 1px ring, reserved for transient overlays (see Elevation & Depth). The one spot of intentional color in the entire system is destructive red, and it appears only on actions that delete something.
+The world: a deep violet ground carries the whole interface — not pure black, a real hue — with **one** vivid orange accent doing every job color does in this app: primary actions, focus rings, the active nav icon, the run-status dot mid-execution. Cards and floating surfaces get a genuine offset-blur shadow tinted to the same violet hue, replacing the old system's flat 1px-ring-only elevation. Geist Variable stays as the UI typeface — Ray's real face, "PT Root UI," is a commercial ParaType font with no legally self-hostable source available here, so this is the closest obtainable face, not a drift from the reference.
 
 **Key Characteristics:**
-- Fully achromatic outside destructive red — no brand color exists yet.
-- One typeface (Geist Variable) for every UI role; monospace only for code, paths, and command/log output.
-- Flat by default; shadow is reserved for things that float above the page, never for things that sit on it.
-- Small, dense controls (32px buttons/inputs) sized for a desktop tool, not a touch surface.
+- Violet is the new neutral: page, card, and popover form a three-tier ground (darkest → card → popover), all one hue family, never pure gray.
+- Orange is the single accent, spent on primary actions, focus, and the one thing that's "live" on any given screen — never decoration.
+- Real shadows (offset + blur, violet-tinted) on cards, popovers, and dropdowns; modals stay ring-only, depth from their dimmed backdrop instead — the one elevation distinction carried over unchanged from the previous system.
+- A colored status dot (idle/running/success/error) on Tinker and Artisan — a direct, deliberate borrow from Ray's own dot-per-log-entry motif.
 
 ## Colors
 
-Entirely grayscale except one deliberate red. Every gray is `oklch` with zero chroma — pure lightness steps, no hue.
+Two families: a violet ground (the new neutral, replacing pure grayscale) and one vivid orange accent. Destructive red is pushed toward true crimson (hue 21) specifically to stay unambiguous next to the orange accent (hue 42) — close enough in the same warm family to feel related, far enough apart that "delete" never reads as "primary action."
 
-### Primary
-- **Ink** (`oklch(0.205 0 0)`): the default button background and the bright/primary color in dark mode. Near-black in light mode, near-white in dark mode — it inverts with the theme rather than staying fixed.
-- **Ink Foreground** (`oklch(0.985 0 0)`): text/icon color on top of Ink.
+### Primary — the accent
+- **Ray Orange** (`oklch(0.72 0.19 42)` dark / `oklch(0.64 0.19 41)` light): every primary button, every focus ring, the active nav icon's fill, the running-state status dot. Nothing else in the system earns this color. Text on it is near-black violet-ink, not white — at this lightness/chroma the dark-on-orange pairing reads noticeably crisper than white-on-orange while still holding well past AA contrast.
 
-### Neutral
-- **Paper** (`oklch(1 0 0)`): page and card background in light mode.
-- **Paper Foreground** (`oklch(0.145 0 0)`): default body text in light mode.
-- **Fog** (`oklch(0.97 0 0)`): secondary/muted/accent surface — hover states, the muted panel behind result output, disabled fills.
-- **Slate** (`oklch(0.556 0 0)`): muted/secondary text — descriptions, placeholders, timestamps, file paths.
-- **Hairline** (`oklch(0.922 0 0)`): borders and input outlines.
-- **Steel** (`oklch(0.708 0 0)`): focus ring color.
+### Neutral — the violet ground
+- **Violet Ink** (`oklch(0.16 0.032 296)`, dark background): the deepest layer — page background in dark mode, and the text color on top of the orange accent in both modes.
+- **Violet Paper** (`oklch(0.975 0.012 296)`, light background) / **Violet Card** (`oklch(0.995 0.003 296)`): light mode's page and card grounds — barely-tinted, not pure white, so the world stays recognizable with the theme flipped.
+- **Violet Card** (`oklch(0.21 0.04 296)`, dark): one step up from the page — every card, every panel surface.
+- **Violet Popover** (`oklch(0.24 0.044 296)`, dark): one step up again — dropdowns, popovers, tooltips; the lightest of the three ground tiers.
+- **Violet Muted** (`oklch(0.7 0.035 296)` dark / `oklch(0.48 0.035 296)` light): secondary text — descriptions, placeholders, timestamps.
+- **Violet Border** (`oklch(1 0 0 / 10%)` dark / `oklch(0.9 0.018 296)` light): hairlines throughout.
 
-### The One Color Rule
-**Signal Red** (`oklch(0.577 0.245 27.325)`) is the only chromatic color anywhere in the system, and it means exactly one thing: destructive. It appears solely on the destructive button variant and delete affordances (remove a saved product, delete a snippet). Nothing else — not a status, not an accent, not a link — may use it. Its rarity is what makes it legible as a warning.
-
-Dark mode inverts lightness (Paper becomes near-black, Ink becomes near-white) rather than remapping hue — because there is no hue to remap. Destructive red also softens in dark mode (`oklch(0.704 0.191 22.216)`, lighter and less saturated) to stay legible on a dark ground without glowing.
+### The One Accent Rule
+Orange means exactly one thing: this is the live, actionable thing on this screen. It never doubles as a status color, a link color, or decoration — a second color competing for that same "look here" signal would defeat the point of having only one.
 
 ## Typography
 
-**UI Font:** Geist Variable, with a `sans-serif` fallback — the only typeface in the system. There is no separate display or heading face; `--font-heading` resolves to the same family as `--font-sans`, so hierarchy comes from weight and size, not a font change.
-**Code/Label Font:** `ui-monospace, Menlo, Consolas, monospace` — used wherever content is code-like: PHP output, file paths, log lines, Artisan command names, saved-snippet code. Not a token in the CSS theme; it's the browser/OS monospace stack, applied directly with `font-mono`.
+**UI Font:** Geist Variable — unchanged from the previous system, and a deliberate adaptation: Ray's real UI face is "PT Root UI," a commercial ParaType typeface with no legal self-hostable source available in this build. Geist is the closest obtainable humanist sans, not a drift from the pinned reference.
+**Code/Label Font:** unchanged, `ui-monospace, Menlo, Consolas, monospace` — code, paths, log lines, command names.
 
-**Character:** Plain and dense. There is no display or headline size anywhere in the app — the largest text is a 16px card title. Everything else sits between 12 and 14px, sized for scanning tool output, not for making a statement.
-
-### Hierarchy
-- **Title** (500 weight, 16px / 14px on compact cards, 1.375 line-height): card titles and the product-name header at the top of a workspace. The only place text goes above body size.
-- **Body** (400 weight, 14px, 1.5 line-height): the default for almost everything — labels, buttons, list items, form fields.
-- **Label / Mono** (400 weight, 12px, `font-mono`): the densest tier — result panels, log lines, saved-snippet names, file paths, Artisan command descriptions. This is where most of the screen's actual content lives.
-
-### Named Rules
-**The One Face Rule.** Every UI role uses Geist Variable. The only typeface switch in the whole app is UI → monospace, and it switches for a reason (this is code / this is a path), never for decoration.
+Hierarchy, roles, and sizing are unchanged from the previous system (Title 16px/500, Body 14px/400, Label/Mono 12px) — this redesign is a material and color change, not a type-scale change.
 
 ## Layout
 
-No responsive breakpoints — this is a desktop window, not a public webpage; layout targets window resizing, not phone/tablet/desktop tiers.
-
-Two distinct shells:
-- **Landing** (`ProjectsHome`): a centered, `max-w-4xl` column holding a `grid-cols-2`/`grid-cols-3` card grid of saved projects plus an "Add new project" card in dashed-border ghost style.
-- **Workspace** (`ProductWorkspace`): a fixed 56px (`w-14`) icon-only nav rail on the left (`WorkspaceNav`), full-height, holding a back arrow, the section icons (Tinker/Artisan/Logs/.env), and Settings pinned to the bottom. The remaining width is the active section.
-
-### Named Rules
-**The Two-Column Rule.** Tinker and Artisan — the two sections with both an input and an output — split their content area exactly in half: input/code on the left, result on the right, full height, divided by a hairline (`border-l`). Landing's card grid and the icon rail are the only other layout patterns; nothing else invents a third.
+Unchanged from the previous system — this redesign is scoped to visuals (color, elevation, shape, chrome), not structure. Landing page card grid, icon-only workspace nav rail, and the Tinker/Artisan two-column split all keep their exact composition; see git history for the original layout documentation if needed.
 
 ## Elevation & Depth
 
-Flat by default. Cards and buttons carry a **1px ring** (`ring-1 ring-foreground/10`), not a shadow — a hairline outline, not a light source. `box-shadow` (`shadow-md`) is reserved for exactly one class of surface: an **anchored floating menu** — popover, select dropdown — that appears next to the control that opened it, with nothing behind it to explain its depth. A **modal** (Dialog, AlertDialog) gets the *same* ring-only treatment as a card, not a shadow: its depth cue is the dimmed backdrop behind it, not the surface itself. The distinction is anchored-menu vs. modal, not "floats vs. doesn't."
+The system's biggest material change. The previous system was flat by design (a 1px ring, never a shadow, anywhere). This world uses real shadows: cards, popovers, and select dropdowns carry an offset, blurred, violet-hue-matched shadow (`--shadow-ambient` / `--shadow-ambient-lg` in `index.css`) instead of a flat ring — genuine depth, not a hairline outline standing in for it.
+
+**Modals kept their old treatment on purpose.** Dialog and AlertDialog still use a ring, not a shadow — their depth cue is the dimmed backdrop behind them, which already does the job a shadow would. This is the one elevation rule carried over unchanged, because it was correct before and stays correct here.
 
 ### Shadow Vocabulary
-- **Anchored menu** (`shadow-md` + `ring-1 ring-foreground/10`): popovers, select dropdowns. The only surfaces that carry an actual shadow.
-- **Modal** (`ring-1 ring-foreground/10` only, no shadow): Dialog, AlertDialog. Depth comes from the dimmed overlay behind it (`bg-black/10` + backdrop blur), not from the panel itself.
+- **Ambient** (`--shadow-ambient`): cards, popovers, select dropdowns. A soft, offset, violet-tinted shadow — `0 10px 28px -8px oklch(0.05 0.03 296 / 0.55), 0 2px 10px -3px oklch(0.05 0.03 296 / 0.4)` in dark mode, lighter and less opaque in light mode.
+- **Ambient Large** (`--shadow-ambient-lg`): reserved for anything that needs to read as sitting well above the page — not yet used by an existing component, available for a future large floating surface.
+- **Modal ring** (`ring-1 ring-foreground/10`, no shadow): Dialog, AlertDialog — depth from the dimmed backdrop, not the panel.
 
 ### Named Rules
-**The Grounded Rule.** A surface in the page's normal flow stays flat — a ring, never a shadow. An anchored menu (popover, select) earns a shadow because it has nothing behind it to read as "above" the page. A modal doesn't need one: the dimmed backdrop already does that job, so the panel itself stays ring-only, same as a card. A card — or a modal — growing a shadow would be the single fastest way to break this system's logic.
+**The Real Depth Rule.** A surface that sits in normal page flow and needs to read as "above" its neighbors gets an actual offset-blur shadow now, not a ring pretending to be one. A modal still doesn't need one — its backdrop already does that job — so modals are the one place a ring alone remains correct.
 
 ## Shapes
 
-Radius is generous but not soft — a working desktop tool, not a rounded consumer app. Base radius is 10px (`--radius: 0.625rem`), scaled up and down from there: 6px (small controls like compact icon buttons), 8px, 10px (default — buttons, inputs, popovers, dropdowns), 14px (cards), up to 18–26px for anything larger that doesn't currently exist in the app. Borders are 1px hairlines throughout; nothing uses a heavier stroke.
+Radius grew softer across the board: base radius moved from 10px to 16px (`--radius: 0.875rem`), scaling the existing sm/md/lg/xl steps up with it (≈9.6 / 12.8 / 16 / 22.4px). A `full` (9999px) pill radius joins the scale for the first time, used by the scrollbar thumb. Borders stay 1px hairlines — the softer corners carry the "modern" read, not thicker strokes.
 
 ## Components
 
-### Buttons
-- **Shape:** 10px radius (`rounded-lg`), 32px height by default, 24–28px for `xs`/`sm`, 36px for `lg`.
-- **Primary** (`default` variant): Ink background, Ink Foreground text; hovers to 80% opacity rather than a different shade.
-- **Outline:** Paper background, hairline border, fills to Fog on hover.
-- **Ghost:** transparent until hover, then fills to Fog. Used for icon-only actions (nav rail, settings, delete-row triggers that only appear on row hover).
-- **Secondary:** Fog background; hover mixes 5% of the foreground color into it rather than jumping to a fixed shade — a subtler hover than Outline's.
-- **Destructive:** Signal Red at 10% opacity as background, full Signal Red as text — never a solid red fill. Reserved for delete actions.
-- **Link:** underline-on-hover only, Ink-colored text, no background at any state.
+Buttons, inputs, cards, dropdowns, popovers, modals, scroll areas, the icon nav rail, and the two Result Panel variants (plain for Artisan, rich sandboxed-iframe for Tinker) are structurally unchanged from the previous system — same shapes, same states, same behavior. What changed is the palette flowing through them (violet ground, orange accent) and elevation (real shadow on card/popover/select, ring-only kept on modals). Two things are genuinely new:
 
-### Cards
-- **Corner style:** 14px radius (`rounded-xl`).
-- **Background:** Paper.
-- **Shadow strategy:** none — 1px ring only (see Elevation & Depth).
-- **Border:** the ring itself is the only border; no separate stroke.
-- **Internal padding:** 16px default, 12px on the `sm` size variant.
+### Status Dot (signature component)
+A small (6px) filled circle next to the Run button on Tinker and Artisan, reflecting the run that's already tracked in state — idle (muted violet), running (pulsing orange), success (green), error (red/destructive). A direct, deliberate borrow from Ray's own real in-app dump feed, where every log entry carries a colored status dot. Purely a new *rendering* of existing state — introduces no new behavior.
 
-### Inputs / Fields
-- **Style:** transparent background, hairline border, 10px radius, 32px height.
-- **Focus:** border shifts to Steel (the ring color) and gains a 3px, 50%-opacity ring around it — a glow, not just a border change.
-- **Error:** border and ring shift to Signal Red at the same weight as the focus treatment, so error state reads as "focus went wrong" rather than a separate visual language.
-- **Disabled:** 50% opacity, background fills faintly with the input tone.
-
-### Field Labels
-- **Style:** 14px, medium weight, sits directly above its field with no visible gap treatment beyond the standard form stack spacing. Dims to 50% opacity and blocks pointer events when its field is disabled (`peer-disabled`) — the label physically reacts to the field's state rather than staying static.
-
-### Dropdowns (Select)
-- **Trigger:** matches Input exactly — same height, radius, border, focus ring — so a select reads as "a field," not a distinct control type.
-- **Menu:** Fog-adjacent popover surface (`bg-popover`), 10px radius, `shadow-md` + 1px ring (an anchored menu — see Elevation & Depth), scroll up/down chevrons instead of clipping.
-- **Item:** highlights to Fog on hover/keyboard-focus; no checkmark column reserved when unselected, so the list doesn't visually shift between selected and unselected states.
-
-### Floating Menus (Popover)
-- **Style:** same anchored-menu treatment as Select's dropdown — `shadow-md` + 1px ring, 10px radius, `w-72` default width. Used for the snippet-history list (save/load/delete saved Tinker snippets) — the one place a popover carries a small form (name input + save button) rather than just a list.
-
-### Modals (Dialog / Alert Dialog)
-- **Style:** centered, 14px radius (`rounded-xl`), 1px ring — **not** a shadow (see The Grounded Rule). Backdrop is a light `bg-black/10` blur, not a heavy scrim; the interface stays legible behind it.
-- **Alert Dialog** (destructive confirmations only, e.g. "Remove 'cci-backend'?"): Cancel renders as Outline, the confirming action as the button's own variant (destructive red for a delete) — the two actions are visually unequal on purpose, so the destructive one doesn't read as the safe default.
-- **Dialog** (forms — add project, settings): same shell, holds a form instead of a confirmation; closes via an explicit `X` in the corner as well as the standard escape/backdrop-click affordances.
-
-### Scroll Areas
-- **Style:** Radix scroll area with a custom 10px-wide thumb-only scrollbar (`bg-border`, `rounded-full`, no visible track) — used for the Artisan command list and the snippet-history list, anywhere a list can outgrow its container.
-
-### Navigation (icon rail)
-- **Style:** 56px-wide vertical rail, icon-only 36px (`size-9`) ghost buttons, no labels — meaning is carried by icon + a native `title` tooltip, not text.
-- **Active state:** Fog background fill on the active section's icon; no color change, no indicator bar.
-- **Fixed anchors:** back-to-projects arrow pinned at the top, Settings pinned at the bottom; the section icons fill the middle and grow only as new sections are added.
-
-### Result Panel (signature component)
-The right-hand column in Tinker and Artisan. Two registered variants:
-- **Plain** (Artisan): `font-mono text-xs` inside a `bg-muted/30` panel, divided from the input column by a hairline. Never HTML-interpreted — Artisan output (e.g. route lists) can contain literal `<...>` text that must render as text, not markup.
-- **Rich** (Tinker only): the same panel, but stdout renders inside a sandboxed `<iframe sandbox="allow-scripts">` so Laravel's `dd()`/`dump()` output (forced into Symfony VarDumper's HTML format) renders as its real collapsible, colored tree — the one place in the app where color and depth genuinely diverge from the rest of the system, because it's the real output of the user's own code, not app chrome.
+### Editor Chrome (Monaco)
+The code editor (Tinker, `.env`) now runs two custom Monaco themes, `ray-dark` / `ray-light` (`src/lib/monaco-setup.ts`), instead of Monaco's stock `vs`/`vs-dark`. Only editor *chrome* is retheme — background, line numbers, cursor (orange), selection, suggest-widget — token/syntax colors are left inherited from the base theme, since Monaco's defaults already read cleanly against the new violet background.
 
 ## Do's and Don'ts
 
 ### Do:
-- **Do** keep every new UI surface achromatic (Paper/Ink/Fog/Slate/Hairline/Steel) unless a deliberate decision introduces a real accent color — see Overview.
-- **Do** use a 1px ring for any surface that sits in normal page flow, and reserve `shadow-md` for content that floats above it and can be dismissed (The Grounded Rule).
-- **Do** keep new "result"-shaped output in the two-column layout (input left, result right) rather than stacking vertically, to match Tinker and Artisan (The Two-Column Rule).
-- **Do** switch to the monospace stack for anything code-like (paths, commands, PHP output, log lines) and keep everything else in Geist Variable (The One Face Rule).
-- **Do** size new interactive controls to the existing 32px/24–28px/36px button scale rather than inventing a new height.
+- **Do** spend orange only on the one live/primary/actionable thing per screen (The One Accent Rule).
+- **Do** give any new in-flow surface (a card, a panel) a real offset-blur shadow from `--shadow-ambient`, not a flat ring (The Real Depth Rule).
+- **Do** keep modals ring-only — their backdrop is already their depth cue.
+- **Do** use the softer 16px-base radius scale for new surfaces; a 10px-feeling corner will look like it belongs to the old system.
+- **Do** switch to the monospace stack for code-like content and keep everything else in Geist Variable.
 
 ### Don't:
-- **Don't** give a card or button a shadow at rest — that breaks the flat/ring elevation model in one visible move.
-- **Don't** introduce Signal Red for anything other than a destructive action — no status colors, no accents, no links in red.
-- **Don't** render Artisan (or any command-output) stdout as HTML — only Tinker's dump output is sandboxed and safe to interpret as markup; command output can contain literal angle brackets.
-- **Don't** add a second typeface. The monospace stack is the only permitted departure from Geist Variable, and only for code-like content.
+- **Don't** introduce a second accent color — orange's whole job depends on there being exactly one.
+- **Don't** give a modal a shadow; that's the one surface this world deliberately keeps flat.
+- **Don't** render Artisan (or any command-output) stdout as HTML — only Tinker's dump output is sandboxed and safe to interpret as markup.
+- **Don't** reach for pure black/white/gray anywhere — every neutral in this system carries the violet hue, even at near-black or near-white lightness.
 - **Don't** design for phone/tablet breakpoints — this is a native desktop window, not a public site.

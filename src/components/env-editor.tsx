@@ -71,7 +71,7 @@ export function EnvEditor({ product }: { product: Product }) {
           value={code}
           onChange={(value) => setCode(value ?? "")}
           onMount={handleMount}
-          theme={resolvedTheme === "dark" ? "vs-dark" : "vs"}
+          theme={resolvedTheme === "dark" ? "ray-dark" : "ray-light"}
           options={{
             fontSize,
             fontFamily,

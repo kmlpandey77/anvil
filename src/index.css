@@ -48,73 +48,88 @@
     --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+/*
+  DIRECTION: "The Ray Console" — pinned by explicit user reference to Ray
+  (myray.app), Spatie's Laravel debug-output desktop app: deep violet ground,
+  one vivid orange accent, soft glowing cards instead of flat rings. Verified
+  against Ray's live marketing site and its real in-app dump feed (screenshot
+  sampled 2026), not recalled from memory. Font stays Geist Variable — Ray's
+  "PT Root UI" is a commercial ParaType face with no legal self-hostable
+  source available here; Geist is the closest obtainable humanist sans.
+  Replaces "The Bare Terminal" (pure-grayscale shadcn defaults) in full.
+*/
+
 :root {
-    --background: oklch(1 0 0);
-    --foreground: oklch(0.145 0 0);
-    --card: oklch(1 0 0);
-    --card-foreground: oklch(0.145 0 0);
+    --background: oklch(0.975 0.012 296);
+    --foreground: oklch(0.19 0.045 296);
+    --card: oklch(0.995 0.003 296);
+    --card-foreground: oklch(0.19 0.045 296);
     --popover: oklch(1 0 0);
-    --popover-foreground: oklch(0.145 0 0);
-    --primary: oklch(0.205 0 0);
-    --primary-foreground: oklch(0.985 0 0);
-    --secondary: oklch(0.97 0 0);
-    --secondary-foreground: oklch(0.205 0 0);
-    --muted: oklch(0.97 0 0);
-    --muted-foreground: oklch(0.556 0 0);
-    --accent: oklch(0.97 0 0);
-    --accent-foreground: oklch(0.205 0 0);
-    --destructive: oklch(0.577 0.245 27.325);
-    --border: oklch(0.922 0 0);
-    --input: oklch(0.922 0 0);
-    --ring: oklch(0.708 0 0);
-    --chart-1: oklch(0.87 0 0);
-    --chart-2: oklch(0.556 0 0);
-    --chart-3: oklch(0.439 0 0);
-    --chart-4: oklch(0.371 0 0);
-    --chart-5: oklch(0.269 0 0);
-    --radius: 0.625rem;
-    --sidebar: oklch(0.985 0 0);
-    --sidebar-foreground: oklch(0.145 0 0);
-    --sidebar-primary: oklch(0.205 0 0);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.97 0 0);
-    --sidebar-accent-foreground: oklch(0.205 0 0);
-    --sidebar-border: oklch(0.922 0 0);
-    --sidebar-ring: oklch(0.708 0 0);
+    --popover-foreground: oklch(0.19 0.045 296);
+    --primary: oklch(0.64 0.19 41);
+    --primary-foreground: oklch(0.99 0.006 60);
+    --secondary: oklch(0.95 0.014 296);
+    --secondary-foreground: oklch(0.28 0.05 296);
+    --muted: oklch(0.95 0.014 296);
+    --muted-foreground: oklch(0.48 0.035 296);
+    --accent: oklch(0.94 0.025 42);
+    --accent-foreground: oklch(0.4 0.12 40);
+    --destructive: oklch(0.58 0.22 19);
+    --border: oklch(0.9 0.018 296);
+    --input: oklch(0.9 0.018 296);
+    --ring: oklch(0.64 0.19 41);
+    --chart-1: oklch(0.64 0.19 41);
+    --chart-2: oklch(0.5 0.15 296);
+    --chart-3: oklch(0.6 0.05 296);
+    --chart-4: oklch(0.75 0.08 42);
+    --chart-5: oklch(0.4 0.08 296);
+    --radius: 0.875rem;
+    --shadow-ambient: 0 10px 28px -10px oklch(0.3 0.06 296 / 0.16), 0 2px 8px -3px oklch(0.3 0.06 296 / 0.12);
+    --shadow-ambient-lg: 0 24px 56px -16px oklch(0.28 0.07 296 / 0.22), 0 8px 20px -8px oklch(0.28 0.07 296 / 0.14);
+    --sidebar: oklch(0.96 0.016 296);
+    --sidebar-foreground: oklch(0.19 0.045 296);
+    --sidebar-primary: oklch(0.64 0.19 41);
+    --sidebar-primary-foreground: oklch(0.99 0.006 60);
+    --sidebar-accent: oklch(0.94 0.025 42);
+    --sidebar-accent-foreground: oklch(0.4 0.12 40);
+    --sidebar-border: oklch(0.9 0.018 296);
+    --sidebar-ring: oklch(0.64 0.19 41);
 }
 
 .dark {
-    --background: oklch(0.145 0 0);
-    --foreground: oklch(0.985 0 0);
-    --card: oklch(0.205 0 0);
-    --card-foreground: oklch(0.985 0 0);
-    --popover: oklch(0.205 0 0);
-    --popover-foreground: oklch(0.985 0 0);
-    --primary: oklch(0.922 0 0);
-    --primary-foreground: oklch(0.205 0 0);
-    --secondary: oklch(0.269 0 0);
-    --secondary-foreground: oklch(0.985 0 0);
-    --muted: oklch(0.269 0 0);
-    --muted-foreground: oklch(0.708 0 0);
-    --accent: oklch(0.269 0 0);
-    --accent-foreground: oklch(0.985 0 0);
-    --destructive: oklch(0.704 0.191 22.216);
+    --background: oklch(0.16 0.032 296);
+    --foreground: oklch(0.96 0.012 296);
+    --card: oklch(0.21 0.04 296);
+    --card-foreground: oklch(0.96 0.012 296);
+    --popover: oklch(0.24 0.044 296);
+    --popover-foreground: oklch(0.96 0.012 296);
+    --primary: oklch(0.72 0.19 42);
+    --primary-foreground: oklch(0.16 0.032 296);
+    --secondary: oklch(0.28 0.048 296);
+    --secondary-foreground: oklch(0.96 0.012 296);
+    --muted: oklch(0.26 0.044 296);
+    --muted-foreground: oklch(0.7 0.035 296);
+    --accent: oklch(0.32 0.07 42);
+    --accent-foreground: oklch(0.93 0.04 45);
+    --destructive: oklch(0.66 0.22 21);
     --border: oklch(1 0 0 / 10%);
-    --input: oklch(1 0 0 / 15%);
-    --ring: oklch(0.556 0 0);
-    --chart-1: oklch(0.87 0 0);
-    --chart-2: oklch(0.556 0 0);
-    --chart-3: oklch(0.439 0 0);
-    --chart-4: oklch(0.371 0 0);
-    --chart-5: oklch(0.269 0 0);
-    --sidebar: oklch(0.205 0 0);
-    --sidebar-foreground: oklch(0.985 0 0);
-    --sidebar-primary: oklch(0.488 0.243 264.376);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.269 0 0);
-    --sidebar-accent-foreground: oklch(0.985 0 0);
+    --input: oklch(1 0 0 / 12%);
+    --ring: oklch(0.72 0.19 42);
+    --chart-1: oklch(0.72 0.19 42);
+    --chart-2: oklch(0.7 0.035 296);
+    --chart-3: oklch(0.55 0.07 296);
+    --chart-4: oklch(0.5 0.1 42);
+    --chart-5: oklch(0.85 0.02 296);
+    --shadow-ambient: 0 10px 28px -8px oklch(0.05 0.03 296 / 0.55), 0 2px 10px -3px oklch(0.05 0.03 296 / 0.4);
+    --shadow-ambient-lg: 0 28px 64px -16px oklch(0.03 0.03 296 / 0.65), 0 10px 24px -8px oklch(0.03 0.03 296 / 0.45);
+    --sidebar: oklch(0.19 0.038 296);
+    --sidebar-foreground: oklch(0.96 0.012 296);
+    --sidebar-primary: oklch(0.72 0.19 42);
+    --sidebar-primary-foreground: oklch(0.16 0.032 296);
+    --sidebar-accent: oklch(0.32 0.07 42);
+    --sidebar-accent-foreground: oklch(0.93 0.04 45);
     --sidebar-border: oklch(1 0 0 / 10%);
-    --sidebar-ring: oklch(0.556 0 0);
+    --sidebar-ring: oklch(0.72 0.19 42);
 }
 
 @layer base {
@@ -127,4 +142,40 @@
   html {
     @apply font-sans;
     }
+
+  ::selection {
+    background: color-mix(in oklch, var(--primary) 32%, transparent);
+    color: var(--foreground);
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 9999px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--muted-foreground);
+    background-clip: content-box;
+  }
+
+  /* Cards and floating surfaces get a soft, offset, hue-matched shadow
+     instead of a flat ring — the whole point of "The Ray Console" over the
+     old ring-only flat system. Dialogs/alert-dialogs keep only a ring (no
+     shadow): their depth cue is the dimmed backdrop behind them, not the
+     panel — same distinction the old system already got right. */
+  [data-slot="card"] {
+    box-shadow: var(--shadow-ambient);
+  }
+  [data-slot="popover-content"],
+  [data-slot="select-content"] {
+    box-shadow: var(--shadow-ambient);
+  }
 }

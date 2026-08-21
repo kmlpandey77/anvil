@@ -1,75 +1,65 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-08-21T08:32:47Z",
+  "generatedAt": "2026-08-21T15:45:00Z",
   "title": "Design System: Laravel Toolkit",
   "extensions": {
     "colorMeta": {
-      "ink": {
+      "ray-orange": {
         "role": "primary",
-        "displayName": "Ink",
-        "canonical": "oklch(0.205 0 0)",
-        "tonalRamp": ["oklch(0.15 0 0)", "oklch(0.205 0 0)", "oklch(0.30 0 0)", "oklch(0.40 0 0)", "oklch(0.50 0 0)", "oklch(0.65 0 0)", "oklch(0.80 0 0)", "oklch(0.95 0 0)"]
+        "displayName": "Ray Orange",
+        "canonical": "oklch(0.72 0.19 42)",
+        "tonalRamp": ["oklch(0.30 0.10 42)", "oklch(0.42 0.15 42)", "oklch(0.55 0.19 42)", "oklch(0.64 0.19 41)", "oklch(0.72 0.19 42)", "oklch(0.80 0.15 42)", "oklch(0.88 0.10 42)", "oklch(0.95 0.05 42)"]
       },
-      "ink-foreground": {
-        "role": "primary-foreground",
-        "displayName": "Ink Foreground",
-        "canonical": "oklch(0.985 0 0)",
-        "tonalRamp": ["oklch(0.15 0 0)", "oklch(0.205 0 0)", "oklch(0.30 0 0)", "oklch(0.40 0 0)", "oklch(0.50 0 0)", "oklch(0.65 0 0)", "oklch(0.80 0 0)", "oklch(0.985 0 0)"]
-      },
-      "paper": {
+      "violet-ink": {
         "role": "neutral",
-        "displayName": "Paper",
-        "canonical": "oklch(1 0 0)",
-        "tonalRamp": ["oklch(0.15 0 0)", "oklch(0.30 0 0)", "oklch(0.45 0 0)", "oklch(0.60 0 0)", "oklch(0.75 0 0)", "oklch(0.90 0 0)", "oklch(0.97 0 0)", "oklch(1 0 0)"]
+        "displayName": "Violet Ink",
+        "canonical": "oklch(0.16 0.032 296)",
+        "tonalRamp": ["oklch(0.10 0.02 296)", "oklch(0.16 0.032 296)", "oklch(0.24 0.044 296)", "oklch(0.34 0.05 296)", "oklch(0.48 0.045 296)", "oklch(0.64 0.035 296)", "oklch(0.80 0.02 296)", "oklch(0.94 0.012 296)"]
       },
-      "paper-foreground": {
+      "violet-card": {
         "role": "neutral",
-        "displayName": "Paper Foreground",
-        "canonical": "oklch(0.145 0 0)",
-        "tonalRamp": ["oklch(0.145 0 0)", "oklch(0.25 0 0)", "oklch(0.40 0 0)", "oklch(0.55 0 0)", "oklch(0.70 0 0)", "oklch(0.82 0 0)", "oklch(0.92 0 0)", "oklch(0.98 0 0)"]
+        "displayName": "Violet Card",
+        "canonical": "oklch(0.21 0.04 296)",
+        "tonalRamp": ["oklch(0.10 0.02 296)", "oklch(0.16 0.032 296)", "oklch(0.21 0.04 296)", "oklch(0.30 0.048 296)", "oklch(0.44 0.045 296)", "oklch(0.60 0.035 296)", "oklch(0.78 0.02 296)", "oklch(0.94 0.012 296)"]
       },
-      "fog": {
+      "violet-popover": {
         "role": "neutral",
-        "displayName": "Fog",
-        "canonical": "oklch(0.97 0 0)",
-        "tonalRamp": ["oklch(0.20 0 0)", "oklch(0.32 0 0)", "oklch(0.46 0 0)", "oklch(0.60 0 0)", "oklch(0.75 0 0)", "oklch(0.88 0 0)", "oklch(0.94 0 0)", "oklch(0.97 0 0)"]
+        "displayName": "Violet Popover",
+        "canonical": "oklch(0.24 0.044 296)",
+        "tonalRamp": ["oklch(0.12 0.024 296)", "oklch(0.18 0.036 296)", "oklch(0.24 0.044 296)", "oklch(0.32 0.05 296)", "oklch(0.46 0.045 296)", "oklch(0.62 0.035 296)", "oklch(0.80 0.02 296)", "oklch(0.95 0.012 296)"]
       },
-      "slate": {
+      "violet-paper": {
         "role": "neutral",
-        "displayName": "Slate",
-        "canonical": "oklch(0.556 0 0)",
-        "tonalRamp": ["oklch(0.18 0 0)", "oklch(0.30 0 0)", "oklch(0.42 0 0)", "oklch(0.556 0 0)", "oklch(0.65 0 0)", "oklch(0.75 0 0)", "oklch(0.85 0 0)", "oklch(0.93 0 0)"]
+        "displayName": "Violet Paper",
+        "canonical": "oklch(0.975 0.012 296)",
+        "tonalRamp": ["oklch(0.16 0.032 296)", "oklch(0.30 0.05 296)", "oklch(0.45 0.045 296)", "oklch(0.60 0.035 296)", "oklch(0.75 0.024 296)", "oklch(0.88 0.016 296)", "oklch(0.95 0.014 296)", "oklch(0.975 0.012 296)"]
       },
-      "hairline": {
+      "violet-muted": {
         "role": "neutral",
-        "displayName": "Hairline",
-        "canonical": "oklch(0.922 0 0)",
-        "tonalRamp": ["oklch(0.20 0 0)", "oklch(0.34 0 0)", "oklch(0.48 0 0)", "oklch(0.62 0 0)", "oklch(0.76 0 0)", "oklch(0.87 0 0)", "oklch(0.922 0 0)", "oklch(0.96 0 0)"]
+        "displayName": "Violet Muted",
+        "canonical": "oklch(0.7 0.035 296)",
+        "tonalRamp": ["oklch(0.20 0.04 296)", "oklch(0.32 0.045 296)", "oklch(0.44 0.045 296)", "oklch(0.48 0.035 296)", "oklch(0.58 0.04 296)", "oklch(0.7 0.035 296)", "oklch(0.82 0.02 296)", "oklch(0.92 0.014 296)"]
       },
-      "steel": {
-        "role": "neutral",
-        "displayName": "Steel",
-        "canonical": "oklch(0.708 0 0)",
-        "tonalRamp": ["oklch(0.20 0 0)", "oklch(0.34 0 0)", "oklch(0.48 0 0)", "oklch(0.62 0 0)", "oklch(0.708 0 0)", "oklch(0.80 0 0)", "oklch(0.88 0 0)", "oklch(0.95 0 0)"]
-      },
-      "signal-red": {
+      "ember-red": {
         "role": "destructive",
-        "displayName": "Signal Red",
-        "canonical": "oklch(0.577 0.245 27.325)",
-        "tonalRamp": ["oklch(0.20 0.10 27.325)", "oklch(0.32 0.15 27.325)", "oklch(0.45 0.20 27.325)", "oklch(0.577 0.245 27.325)", "oklch(0.65 0.22 27.325)", "oklch(0.72 0.19 22.216)", "oklch(0.80 0.14 22.216)", "oklch(0.90 0.08 22.216)"]
+        "displayName": "Ember Red",
+        "canonical": "oklch(0.66 0.22 21)",
+        "tonalRamp": ["oklch(0.22 0.10 21)", "oklch(0.34 0.16 21)", "oklch(0.46 0.2 21)", "oklch(0.58 0.22 19)", "oklch(0.66 0.22 21)", "oklch(0.74 0.18 21)", "oklch(0.83 0.12 21)", "oklch(0.91 0.06 21)"]
       }
     },
     "typographyMeta": {
-      "title": { "displayName": "Title", "purpose": "Card titles and the product-name header at the top of a workspace. The only text above body size in the app." },
-      "body": { "displayName": "Body", "purpose": "Default text for labels, buttons, list items, and form fields." },
-      "label": { "displayName": "Label / Mono", "purpose": "Code-like content: PHP output, file paths, log lines, Artisan command names, saved snippets." }
+      "title": { "displayName": "Title", "purpose": "Card titles and the product-name header at the top of a workspace. Unchanged from the prior system." },
+      "body": { "displayName": "Body", "purpose": "Default text for labels, buttons, list items, and form fields. Unchanged." },
+      "label": { "displayName": "Label / Mono", "purpose": "Code-like content: PHP output, file paths, log lines, command names. Unchanged." }
     },
     "shadows": [
-      { "name": "anchored-menu", "value": "shadow-md + ring-1 ring-foreground/10", "purpose": "The only surfaces that carry a real shadow: popovers and select dropdowns. Never used on in-flow surfaces (cards, buttons) or on modals — see The Grounded Rule." },
-      { "name": "modal", "value": "ring-1 ring-foreground/10 only, no shadow, over bg-black/10 backdrop blur", "purpose": "Dialog / Alert Dialog. Depth comes from the dimmed backdrop behind the panel, not a shadow on the panel itself." }
+      { "name": "ambient", "value": "0 10px 28px -8px oklch(0.05 0.03 296 / 0.55), 0 2px 10px -3px oklch(0.05 0.03 296 / 0.4) [dark]; lighter/less opaque in light mode", "purpose": "Cards, popovers, select dropdowns — the system's new real depth cue, replacing the old ring-only flat model." },
+      { "name": "ambient-lg", "value": "0 28px 64px -16px oklch(0.03 0.03 296 / 0.65), 0 10px 24px -8px oklch(0.03 0.03 296 / 0.45) [dark]", "purpose": "Reserved for a future large floating surface; not yet consumed by an existing component." },
+      { "name": "modal", "value": "ring-1 ring-foreground/10 only, no shadow, over bg-black/10 backdrop blur", "purpose": "Dialog / Alert Dialog — depth from the dimmed backdrop, the one elevation treatment carried over unchanged from the prior system." }
     ],
     "motion": [
-      { "name": "overlay-transition", "value": "duration-100 (fade/zoom via tw-animate-css data-open/data-closed variants)", "purpose": "Fast, near-instant open/close for popovers, dialogs, and dropdowns — a tool that reacts immediately, not a marketing surface with lingering transitions." }
+      { "name": "overlay-transition", "value": "duration-100 (fade/zoom via tw-animate-css data-open/data-closed variants)", "purpose": "Unchanged — fast, near-instant open/close for popovers, dialogs, and dropdowns." },
+      { "name": "status-pulse", "value": "animate-pulse on the running-state status dot", "purpose": "The only new motion — signals a run in progress via Tailwind's default pulse, matching Ray's own live-log feel." }
     ]
   },
   "components": [
@@ -77,121 +67,59 @@
       "name": "Primary Button",
       "kind": "button",
       "refersTo": "button-primary",
-      "description": "Default action button — Ink background, inverts with theme.",
+      "description": "Default action button — vivid Ray Orange, dark-violet text (crisper than white at this lightness/chroma).",
       "html": "<button class=\"ds-btn-primary\">Run</button>",
-      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; height: 32px; padding: 0 10px; gap: 6px; border-radius: 10px; border: none; background: #363636; color: #fafafa; font-family: 'Geist Variable', sans-serif; font-size: 14px; font-weight: 500; transition: background-color 0.15s, opacity 0.15s; } .ds-btn-primary:hover { opacity: 0.8; } .ds-btn-primary:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(180,180,180,0.5); } .ds-btn-primary:active { transform: translateY(1px); }"
-    },
-    {
-      "name": "Outline Button",
-      "kind": "button",
-      "refersTo": "button-outline",
-      "description": "Secondary action button with a hairline border, fills to Fog on hover.",
-      "html": "<button class=\"ds-btn-outline\">Reload</button>",
-      "css": ".ds-btn-outline { display: inline-flex; align-items: center; justify-content: center; height: 32px; padding: 0 10px; gap: 6px; border-radius: 10px; border: 1px solid #e8e8e8; background: #ffffff; color: #252525; font-family: 'Geist Variable', sans-serif; font-size: 14px; font-weight: 500; transition: background-color 0.15s; } .ds-btn-outline:hover { background: #f7f7f7; } .ds-btn-outline:focus-visible { outline: none; border-color: #b5b5b5; box-shadow: 0 0 0 3px rgba(180,180,180,0.5); }"
-    },
-    {
-      "name": "Ghost Icon Button",
-      "kind": "button",
-      "refersTo": "button-ghost",
-      "description": "Icon-only button used in the nav rail and row-hover actions (e.g. delete).",
-      "html": "<button class=\"ds-btn-ghost\" title=\"Settings\" aria-label=\"Settings\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"12\" r=\"3\"/><path d=\"M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z\"/></svg></button>",
-      "css": ".ds-btn-ghost { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 10px; border: none; background: transparent; color: #252525; transition: background-color 0.15s; } .ds-btn-ghost:hover { background: #f7f7f7; } .ds-btn-ghost[data-active=\"true\"] { background: #f7f7f7; }"
-    },
-    {
-      "name": "Destructive Button",
-      "kind": "button",
-      "refersTo": "button-destructive",
-      "description": "Delete/remove actions — the only place Signal Red appears.",
-      "html": "<button class=\"ds-btn-destructive\">Remove</button>",
-      "css": ".ds-btn-destructive { display: inline-flex; align-items: center; justify-content: center; height: 32px; padding: 0 10px; border-radius: 10px; border: none; background: color-mix(in oklch, oklch(0.577 0.245 27.325), transparent 90%); color: oklch(0.577 0.245 27.325); font-family: 'Geist Variable', sans-serif; font-size: 14px; font-weight: 500; transition: background-color 0.15s; } .ds-btn-destructive:hover { background: color-mix(in oklch, oklch(0.577 0.245 27.325), transparent 80%); }"
-    },
-    {
-      "name": "Input",
-      "kind": "input",
-      "refersTo": "input",
-      "description": "Text field — transparent fill, hairline border, glow-ring focus.",
-      "html": "<input class=\"ds-input\" type=\"text\" placeholder=\"Filter commands…\" />",
-      "css": ".ds-input { height: 32px; width: 100%; padding: 4px 10px; border-radius: 10px; border: 1px solid #e8e8e8; background: transparent; color: #252525; font-family: 'Geist Variable', sans-serif; font-size: 14px; transition: border-color 0.15s, box-shadow 0.15s; } .ds-input::placeholder { color: #8e8e8e; } .ds-input:focus-visible { outline: none; border-color: #b5b5b5; box-shadow: 0 0 0 3px rgba(180,180,180,0.5); } .ds-input:disabled { opacity: 0.5; background: rgba(232,232,232,0.5); cursor: not-allowed; }"
-    },
-    {
-      "name": "Field Label",
-      "kind": "custom",
-      "description": "Sits above a field; dims with its field's disabled state rather than staying static.",
-      "html": "<label class=\"ds-label\" for=\"example\">Project path</label>",
-      "css": ".ds-label { display: flex; align-items: center; gap: 8px; font-family: 'Geist Variable', sans-serif; font-size: 14px; font-weight: 500; line-height: 1; color: #252525; user-select: none; } .ds-label[data-disabled=\"true\"] { opacity: 0.5; pointer-events: none; }"
-    },
-    {
-      "name": "Dropdown (Select)",
-      "kind": "custom",
-      "description": "Anchored floating menu — trigger matches Input exactly; menu carries the system's only earned shadow.",
-      "html": "<div class=\"ds-select\"><button class=\"ds-select-trigger\">System <span>▾</span></button><div class=\"ds-select-menu\"><div class=\"ds-select-item\">Light</div><div class=\"ds-select-item\" data-active=\"true\">Dark</div><div class=\"ds-select-item\">System</div></div></div>",
-      "css": ".ds-select-trigger { display: inline-flex; align-items: center; justify-content: space-between; gap: 8px; height: 32px; width: 100%; padding: 4px 10px; border-radius: 10px; border: 1px solid #e8e8e8; background: transparent; color: #252525; font-family: 'Geist Variable', sans-serif; font-size: 14px; } .ds-select-menu { margin-top: 4px; min-width: 144px; padding: 4px; border-radius: 10px; background: #ffffff; box-shadow: 0 4px 12px rgba(0,0,0,0.08); box-shadow: 0 4px 12px rgba(0,0,0,0.08), 0 0 0 1px rgba(37,37,37,0.10); } .ds-select-item { padding: 6px 8px; border-radius: 8px; font-size: 14px; color: #252525; cursor: pointer; } .ds-select-item:hover, .ds-select-item[data-active=\"true\"] { background: #f7f7f7; }"
-    },
-    {
-      "name": "Floating Menu (Popover)",
-      "kind": "custom",
-      "description": "Same anchored-menu shadow treatment as Select; hosts the snippet-history list + inline save form.",
-      "html": "<div class=\"ds-popover\"><div class=\"ds-popover-row\"><input class=\"ds-input\" placeholder=\"Save current as…\" /><button class=\"ds-btn-primary\">Save</button></div><div class=\"ds-select-item\">count users</div></div>",
-      "css": ".ds-popover { width: 288px; padding: 8px; border-radius: 10px; background: #ffffff; box-shadow: 0 4px 12px rgba(0,0,0,0.08), 0 0 0 1px rgba(37,37,37,0.10); } .ds-popover-row { display: flex; gap: 8px; padding-bottom: 8px; margin-bottom: 8px; border-bottom: 1px solid #e8e8e8; }"
-    },
-    {
-      "name": "Modal (Dialog / Alert Dialog)",
-      "kind": "custom",
-      "description": "Ring-only, not shadowed — depth comes from the dimmed backdrop, not the panel (see The Grounded Rule).",
-      "html": "<div class=\"ds-modal-backdrop\"><div class=\"ds-modal\"><div class=\"ds-modal-title\">Remove \"cci-backend\"?</div><div class=\"ds-modal-desc\">This only removes the saved connection — nothing on disk is touched.</div><div class=\"ds-modal-actions\"><button class=\"ds-btn-outline\">Cancel</button><button class=\"ds-btn-destructive\">Remove</button></div></div></div>",
-      "css": ".ds-modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.10); backdrop-filter: blur(2px); display: flex; align-items: center; justify-content: center; } .ds-modal { width: 100%; max-width: 384px; padding: 16px; border-radius: 14px; background: #ffffff; box-shadow: 0 0 0 1px rgba(37,37,37,0.10); display: flex; flex-direction: column; gap: 16px; } .ds-modal-title { font-size: 16px; font-weight: 500; color: #252525; } .ds-modal-desc { font-size: 14px; color: #8e8e8e; } .ds-modal-actions { display: flex; justify-content: flex-end; gap: 8px; }"
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; height: 32px; padding: 0 10px; gap: 6px; border-radius: 16px; border: none; background: oklch(0.72 0.19 42); color: oklch(0.16 0.032 296); font-family: 'Geist Variable', sans-serif; font-size: 14px; font-weight: 500; transition: background-color 0.15s, opacity 0.15s; } .ds-btn-primary:hover { opacity: 0.85; } .ds-btn-primary:focus-visible { outline: none; box-shadow: 0 0 0 3px oklch(0.72 0.19 42 / 0.5); } .ds-btn-primary:disabled { opacity: 0.5; }"
     },
     {
       "name": "Card",
       "kind": "card",
       "refersTo": "card",
-      "description": "Flat container with a hairline ring instead of a shadow — the incumbent project card and settings-panel container.",
+      "description": "Flat-ground panel with a real offset-blur shadow (The Real Depth Rule) instead of the old ring-only treatment.",
       "html": "<div class=\"ds-card\"><div class=\"ds-card-title\">cci-backend</div><div class=\"ds-card-desc\">/home/user/projects/cci-backend</div></div>",
-      "css": ".ds-card { display: flex; flex-direction: column; gap: 16px; padding: 16px; border-radius: 14px; background: #ffffff; box-shadow: 0 0 0 1px rgba(37,37,37,0.10); font-family: 'Geist Variable', sans-serif; } .ds-card:hover { box-shadow: 0 0 0 1px rgba(37,37,37,0.10), 0 0 0 1px #252525; } .ds-card-title { font-size: 16px; font-weight: 500; line-height: 1.375; color: #252525; } .ds-card-desc { font-size: 12px; font-family: ui-monospace, Menlo, Consolas, monospace; color: #8e8e8e; }"
+      "css": ".ds-card { display: flex; flex-direction: column; gap: 16px; padding: 16px; border-radius: 22.4px; background: oklch(0.21 0.04 296); box-shadow: 0 10px 28px -8px oklch(0.05 0.03 296 / 0.55), 0 2px 10px -3px oklch(0.05 0.03 296 / 0.4); font-family: 'Geist Variable', sans-serif; } .ds-card-title { font-size: 16px; font-weight: 500; line-height: 1.375; color: oklch(0.96 0.012 296); } .ds-card-desc { font-size: 12px; font-family: ui-monospace, Menlo, Consolas, monospace; color: oklch(0.7 0.035 296); }"
     },
     {
-      "name": "Result Panel (Rich)",
+      "name": "Status Dot",
       "kind": "custom",
-      "description": "Tinker's output column — dd()-style HTML rendered in a sandboxed iframe, distinct from Artisan's plain-text panel.",
-      "html": "<div class=\"ds-result-panel\"><div class=\"ds-result-empty\">Run to see output.</div></div>",
-      "css": ".ds-result-panel { height: 100%; overflow: hidden; display: flex; flex-direction: column; border-left: 1px solid #e8e8e8; background: rgba(247,247,247,0.3); } .ds-result-empty { padding: 16px; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 12px; color: #8e8e8e; }"
+      "description": "New signature component — idle/running/success/error indicator next to the Run button, a direct borrow from Ray's own dot-per-log-entry motif. Reflects existing run state; introduces no new behavior.",
+      "html": "<span class=\"ds-status-dot ds-status-running\"></span>",
+      "css": ".ds-status-dot { display: inline-block; width: 6px; height: 6px; border-radius: 9999px; } .ds-status-dot.idle { background: oklch(0.7 0.035 296 / 0.4); } .ds-status-dot.running { background: oklch(0.72 0.19 42); animation: ds-pulse 1.5s ease-in-out infinite; } .ds-status-dot.success { background: #10b981; } .ds-status-dot.error { background: oklch(0.66 0.22 21); } @keyframes ds-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }"
     },
     {
-      "name": "Scroll Area",
+      "name": "Modal (Dialog / Alert Dialog)",
       "kind": "custom",
-      "description": "Thumb-only scrollbar, no visible track — used for the Artisan command list and snippet-history list.",
-      "html": "<div class=\"ds-scroll\"><div class=\"ds-scroll-thumb\"></div></div>",
-      "css": ".ds-scroll { position: relative; width: 10px; height: 100%; padding: 1px; } .ds-scroll-thumb { position: relative; flex: 1; width: 100%; border-radius: 9999px; background: #e8e8e8; }"
+      "description": "Ring-only, no shadow — the one elevation treatment kept unchanged from the prior system, since the dimmed backdrop already carries depth.",
+      "html": "<div class=\"ds-modal-backdrop\"><div class=\"ds-modal\"><div class=\"ds-modal-title\">Settings</div></div></div>",
+      "css": ".ds-modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.10); backdrop-filter: blur(2px); display: flex; align-items: center; justify-content: center; } .ds-modal { width: 100%; max-width: 384px; padding: 16px; border-radius: 22.4px; background: oklch(0.21 0.04 296); box-shadow: 0 0 0 1px oklch(1 0 0 / 0.10); } .ds-modal-title { font-size: 16px; font-weight: 500; color: oklch(0.96 0.012 296); }"
     }
   ],
   "narrative": {
-    "northStar": "The Bare Terminal",
-    "overview": "No accent color has been chosen. This is deliberate, not unfinished: the interface is a monochrome instrument for reading PHP output and moving between a handful of tools, and any color would compete with the one thing that actually needs it — the syntax-highlighted editor and the dd()-style dump output at the center of the screen. The system runs on shadcn/ui's stock \"Nova\" style with a neutral base color, unmodified. That is itself the choice: reach for a customized palette only when a real reason to differentiate shows up, not by default.\n\nDensity is tight and utilitarian — an icon-only 56px nav rail, 32px controls, 12–14px text almost everywhere. Surfaces sit flat at rest; the only depth cue is a 1px ring, reserved for transient overlays. The one spot of intentional color in the entire system is destructive red, and it appears only on actions that delete something.",
+    "northStar": "The Ray Console",
+    "overview": "Pinned by explicit user reference to Ray (myray.app), Spatie's Laravel debug-output desktop app — the closest possible analog to this app's own dd()/dump() output. Verified against Ray's live site and its real in-app dump feed before writing a single token. Replaces \"The Bare Terminal\" in full.\n\nThe world: a deep violet ground carries the whole interface, with one vivid orange accent doing every job color does — primary actions, focus rings, the active nav icon, the run-status dot. Cards and floating surfaces get a genuine offset-blur shadow instead of the old flat ring. Geist Variable stays as the UI typeface — Ray's real face is a commercial font with no legal self-hostable source here, so this is the closest obtainable face, not a drift.",
     "keyCharacteristics": [
-      "Fully achromatic outside destructive red — no brand color exists yet.",
-      "One typeface (Geist Variable) for every UI role; monospace only for code, paths, and command/log output.",
-      "Flat by default; shadow is reserved for things that float above the page, never for things that sit on it.",
-      "Small, dense controls (32px buttons/inputs) sized for a desktop tool, not a touch surface."
+      "Violet is the new neutral: page, card, and popover form a three-tier ground, all one hue family, never pure gray.",
+      "Orange is the single accent — primary actions, focus, and the one live thing per screen, never decoration.",
+      "Real shadows (offset + blur, violet-tinted) on cards/popovers/dropdowns; modals stay ring-only.",
+      "A colored status dot (idle/running/success/error) — a direct borrow from Ray's own dot-per-log-entry motif."
     ],
     "rules": [
-      { "name": "The One Color Rule", "body": "Signal Red is the only chromatic color anywhere in the system, and it means exactly one thing: destructive. Nothing else — not a status, not an accent, not a link — may use it.", "section": "colors" },
-      { "name": "The One Face Rule", "body": "Every UI role uses Geist Variable. The only typeface switch in the whole app is UI → monospace, and it switches for a reason (this is code / this is a path), never for decoration.", "section": "typography" },
-      { "name": "The Two-Column Rule", "body": "Tinker and Artisan split their content area exactly in half: input/code on the left, result on the right, full height, divided by a hairline. Nothing else invents a third layout pattern.", "section": "layout" },
-      { "name": "The Grounded Rule", "body": "A surface in the page's normal flow stays flat — a ring, never a shadow. An anchored menu (popover, select) earns a shadow because it has nothing behind it to read as \"above\" the page. A modal doesn't need one: the dimmed backdrop already does that job, so the panel itself stays ring-only, same as a card.", "section": "elevation" }
+      { "name": "The One Accent Rule", "body": "Orange means exactly one thing: this is the live, actionable thing on this screen. It never doubles as a status color, a link color, or decoration.", "section": "colors" },
+      { "name": "The Real Depth Rule", "body": "A surface in normal page flow that needs to read as above its neighbors gets a real offset-blur shadow now, not a ring pretending to be one. A modal still doesn't need one — its backdrop already does that job.", "section": "elevation" }
     ],
     "dos": [
-      "Do keep every new UI surface achromatic (Paper/Ink/Fog/Slate/Hairline/Steel) unless a deliberate decision introduces a real accent color.",
-      "Do use a 1px ring for any surface that sits in normal page flow, and reserve shadow-md for content that floats above it and can be dismissed.",
-      "Do keep new \"result\"-shaped output in the two-column layout (input left, result right) rather than stacking vertically.",
-      "Do switch to the monospace stack for anything code-like and keep everything else in Geist Variable.",
-      "Do size new interactive controls to the existing 32px/24–28px/36px button scale."
+      "Do spend orange only on the one live/primary/actionable thing per screen.",
+      "Do give any new in-flow surface a real offset-blur shadow from --shadow-ambient, not a flat ring.",
+      "Do keep modals ring-only — their backdrop is already their depth cue.",
+      "Do use the softer 16px-base radius scale for new surfaces.",
+      "Do switch to the monospace stack for code-like content and keep everything else in Geist Variable."
     ],
     "donts": [
-      "Don't give a card or button a shadow at rest — that breaks the flat/ring elevation model in one visible move.",
-      "Don't introduce Signal Red for anything other than a destructive action.",
-      "Don't render Artisan (or any command-output) stdout as HTML — only Tinker's dump output is sandboxed and safe to interpret as markup.",
-      "Don't add a second typeface beyond the monospace exception.",
-      "Don't design for phone/tablet breakpoints — this is a native desktop window, not a public site."
+      "Don't introduce a second accent color — orange's whole job depends on there being exactly one.",
+      "Don't give a modal a shadow; that's the one surface this world deliberately keeps flat.",
+      "Don't render Artisan (or any command-output) stdout as HTML.",
+      "Don't reach for pure black/white/gray anywhere — every neutral carries the violet hue.",
+      "Don't design for phone/tablet breakpoints — this is a native desktop window."
     ]
   }
 }
