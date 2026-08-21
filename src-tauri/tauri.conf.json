@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "Laravel Toolkit",
+  "productName": "Anvil",
   "version": "0.1.0",
   "identifier": "com.laraveltoolkit.app",
   "build": {
@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "Laravel Toolkit",
+        "title": "Anvil",
         "width": 800,
         "height": 600
       }

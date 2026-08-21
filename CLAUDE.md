@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-A Tauri v2 + React + TypeScript desktop app (Tinkerwell-alike) for running PHP/Laravel snippets against real local Laravel projects — a REPL ("Tinker"), an Artisan command runner, a log viewer, and a `.env` editor, all scoped per saved project ("product"). See `PLAN.md` for the full running design log (why each piece works the way it does, what was tried and reverted, and what's explicitly out of scope) — read it before making non-trivial changes; this file only covers what's needed to start working.
+**Anvil** — a Tauri v2 + React + TypeScript desktop app (Tinkerwell-alike) for running PHP/Laravel snippets against real local Laravel projects — a REPL ("Tinker"), an Artisan command runner, a log viewer, and a `.env` editor, all scoped per saved project ("product"). See `PLAN.md` for the full running design log (why each piece works the way it does, what was tried and reverted, and what's explicitly out of scope) — read it before making non-trivial changes; this file only covers what's needed to start working.
 
 ## Commands
 

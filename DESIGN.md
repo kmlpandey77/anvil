@@ -1,5 +1,5 @@
 ---
-name: Laravel Toolkit
+name: Anvil
 description: A violet-and-orange debug console pinned to Ray by Spatie's real visual language
 colors:
   violet-ink: "oklch(0.16 0.032 296)"
@@ -68,7 +68,7 @@ components:
     padding: "16px"
 ---
 
-# Design System: Laravel Toolkit
+# Design System: Anvil
 
 ## Overview
 

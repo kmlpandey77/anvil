@@ -40,7 +40,7 @@ export function ProjectsHome({
   return (
     <div className="mx-auto flex h-full w-full max-w-4xl flex-col p-8">
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-lg font-semibold">Laravel Toolkit</h1>
+        <h1 className="text-lg font-semibold">Anvil</h1>
         <SettingsDialog />
       </div>
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
