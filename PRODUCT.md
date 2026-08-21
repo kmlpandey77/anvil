@@ -33,7 +33,7 @@ Used alongside a terminal and IDE during local Laravel development. The user add
 
 ## Brand Commitments
 
-Name: **Anvil** — confirmed, replacing the "Laravel Toolkit" placeholder. Chosen from a curated shortlist (Lantern, Anvil, Beacon) tied to the app's visual world ("The Ray Console" — warm accent, workshop-plain) and Laravel's own "artisan" CLI language: an anvil is where a craftsman shapes things, solid and workshop-coded rather than precious. App icon is a custom anvil silhouette (horn, face, waist, base) in Ray Orange on a Violet Ink rounded-square ground, built from the same design tokens as the rest of the UI (`src-tauri/icons/`).
+Name: **Anvil** — confirmed, replacing the "Laravel Toolkit" placeholder. Chosen from a curated shortlist (Lantern, Anvil, Beacon) tied to the app's visual world ("The Ray Console" — warm accent, workshop-plain) and Laravel's own "artisan" CLI language: an anvil is where a craftsman shapes things, solid and workshop-coded rather than precious. App icon is a user-supplied illustration (blacksmith forging glowing metal on an anvil, black/orange/white), cropped in on just the anvil, glowing bar, and sparks for a legible silhouette at small sizes — the full illustration reads as a muddy blob at 32px, the tight crop still reads clearly. Replaces the earlier hand-drawn two-tone anvil mark (`src-tauri/icons/`).
 
 ## Product Principles
 
