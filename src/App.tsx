@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { ProductsSidebar } from "@/components/products-sidebar";
+import { SnippetRunner } from "@/components/snippet-runner";
 import { Toaster } from "@/components/ui/sonner";
 import { listProducts, type Product } from "@/lib/products";
 import { toast } from "sonner";
@@ -31,14 +32,13 @@ function App() {
           setSelectedId((cur) => (cur === id ? null : cur));
         }}
       />
-      <div className="flex flex-1 items-center justify-center text-muted-foreground">
+      <div className="flex flex-1 flex-col">
         {selected ? (
-          <p>
-            Selected <span className="font-medium">{selected.name}</span> —
-            the editor lands in milestone 3.
-          </p>
+          <SnippetRunner key={selected.id} product={selected} />
         ) : (
-          <p>Select or add a product to get started.</p>
+          <div className="flex flex-1 items-center justify-center text-muted-foreground">
+            <p>Select or add a product to get started.</p>
+          </div>
         )}
       </div>
       <Toaster />
