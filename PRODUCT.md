@@ -29,11 +29,11 @@ Used alongside a terminal and IDE during local Laravel development. The user add
 - Single-user, fully local. No accounts, no network calls except an optional shadcn/ui component-registry fetch during development.
 - No SSH/remote projects, no Docker/Sail-specific handling, no XDebug/step-debugging, no AI features, no team or multi-user support, no database/SQL browser (built once, then deliberately removed).
 - Current feature set: Tinker (PHP REPL with autocomplete, member completion, and dd()-style rich output), Artisan command runner, log tailing, `.env` editor, snippet history, per-viewer settings (theme, editor font).
-- App icon is still a placeholder (default Tauri icon), not a locked decision.
+- App icon matches the app's visual identity (custom anvil mark, see Brand Commitments).
 
 ## Brand Commitments
 
-Name: **Anvil** — confirmed, replacing the "Laravel Toolkit" placeholder. Chosen from a curated shortlist (Lantern, Anvil, Beacon) tied to the app's visual world ("The Ray Console" — warm accent, workshop-plain) and Laravel's own "artisan" CLI language: an anvil is where a craftsman shapes things, solid and workshop-coded rather than precious. App icon is still the default Tauri icon — not yet designed to match.
+Name: **Anvil** — confirmed, replacing the "Laravel Toolkit" placeholder. Chosen from a curated shortlist (Lantern, Anvil, Beacon) tied to the app's visual world ("The Ray Console" — warm accent, workshop-plain) and Laravel's own "artisan" CLI language: an anvil is where a craftsman shapes things, solid and workshop-coded rather than precious. App icon is a custom anvil silhouette (horn, face, waist, base) in Ray Orange on a Violet Ink rounded-square ground, built from the same design tokens as the rest of the UI (`src-tauri/icons/`).
 
 ## Product Principles
 
