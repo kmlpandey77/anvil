@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { ProductsSidebar } from "@/components/products-sidebar";
-import { SnippetRunner } from "@/components/snippet-runner";
+import { ProductWorkspace } from "@/components/product-workspace";
 import { Toaster } from "@/components/ui/sonner";
 import { listProducts, type Product } from "@/lib/products";
 import { toast } from "sonner";
@@ -34,7 +34,7 @@ function App() {
       />
       <div className="flex flex-1 flex-col">
         {selected ? (
-          <SnippetRunner key={selected.id} product={selected} />
+          <ProductWorkspace key={selected.id} product={selected} />
         ) : (
           <div className="flex flex-1 items-center justify-center text-muted-foreground">
             <p>Select or add a product to get started.</p>

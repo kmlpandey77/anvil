@@ -9,7 +9,12 @@ Tauri + React + shadcn/ui desktop app for running PHP/Laravel snippets against r
 3. **Autocomplete** — as you type, suggest PHP keywords/built-in functions plus the connected project's own classes (`App\Models\User`, etc.), pulled from the real project, not a static guess. ✅ shipped
 4. **Member completion** — after `Class::` or `$var->` (where `$var` was assigned via `$var = new Class(`), suggest real public methods/properties via PHP reflection, plus `@property`/`@method` docblock tags (picked up automatically if the project has run `php artisan ide-helper:models` — no dependency on the package itself, just its output format). ✅ shipped
 
-Explicitly out of scope: SSH/remote/Docker connections, multi-environment products, XDebug, AI chat, log tailing, table mode, snippets library, themes, team/sharing, and any Laravel-version compatibility checker (dropped — not needed). Add later only if actually needed.
+5. **Artisan runner** — list the project's real `artisan` commands and run one, output shown the same way as a snippet. 🚧 in progress
+6. **Log tailing** — poll `storage/logs/*.log` and show the tail, while the Logs tab is open. 🚧 in progress
+7. **DB/table browser** — run raw SQL through the project's configured Laravel DB connection, results rendered as a table instead of a `var_dump` blob. 🚧 in progress
+8. **Snippet history** — save/load/delete named snippets per product. 🚧 in progress
+
+Explicitly out of scope: SSH/remote/Docker connections, multi-environment products, XDebug, AI chat, team/sharing, and any Laravel-version compatibility checker (dropped — not needed). Add later only if actually needed.
 
 ## Why Tauri, not Electron
 
@@ -70,6 +75,12 @@ type Product = {
 4. ✅ **Autocomplete**: `list_symbols` Rust command (PSR-4 class walk + built-in functions) + CodeMirror completion source.
 5. ✅ **Member completion**: `list_members` Rust command (reflection + docblock parsing) + `::`/`->` triggers.
 6. ✅ **Settings**: theme (light/dark/system via `next-themes`, already a shadcn-init dependency) + editor font size/family, persisted in `localStorage` (per-viewer UI preference, not project data — doesn't belong in the Rust-backed `products.json`).
-7. **Polish** (only if actually needed after using it): multiple tabs per product, keyboard shortcuts beyond ⌘Enter, richer error states.
+7. 🚧 **Artisan runner**: `list_artisan_commands` (`php artisan list --format=json`) + `run_artisan_command`, a new "Artisan" tab.
+8. 🚧 **Log tailing**: `read_log_tail` (find newest `storage/logs/*.log`, read its tail), frontend polls every ~2s while the "Logs" tab is open — no filesystem-watcher plugin, polling is simpler and good enough for a log viewer.
+9. 🚧 **DB/table browser**: `run_query` (boots the Kernel like `run_snippet`, runs `DB::select($sql)`, returns rows as JSON), a new "Database" tab renders them as an actual table. SQL only (no arbitrary PHP) — that's the point of the tab.
+10. 🚧 **Snippet history**: `snippets.json` in the app data dir (same pattern as `products.json`), keyed by product — save/load/delete named snippets from the Tinker tab.
+11. **Polish** (only if actually needed after using it): keyboard shortcuts beyond ⌘Enter, richer error states.
+
+Main pane becomes a `Tabs` bar per product: Tinker | Artisan | Logs | Database.
 
 Each milestone should be a working app, not a stub.

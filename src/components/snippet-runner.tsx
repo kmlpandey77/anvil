@@ -3,6 +3,7 @@ import Editor, { type OnMount } from "@monaco-editor/react";
 import type * as Monaco from "monaco-editor";
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
+import { RunResultPanel } from "@/components/run-result-panel";
 import { runSnippet, type RunResult } from "@/lib/run";
 import { listSymbols, registerPhpCompletionProviders, type Symbols } from "@/lib/symbols";
 import { useEditorSettings } from "@/lib/settings";
@@ -59,8 +60,7 @@ export function SnippetRunner({ product }: { product: Product }) {
 
   return (
     <div className="flex h-full flex-col">
-      <div className="flex items-center justify-between border-b px-4 py-2">
-        <span className="text-sm font-medium">{product.name}</span>
+      <div className="flex items-center justify-end border-b px-4 py-2">
         <Button size="sm" onClick={run} disabled={running}>
           {running ? "Running…" : "Run (⌘⏎)"}
         </Button>
@@ -80,23 +80,7 @@ export function SnippetRunner({ product }: { product: Product }) {
           }}
         />
       </div>
-      {result && (
-        <div className="max-h-64 overflow-auto border-t bg-muted/30 p-4 font-mono text-xs">
-          {result.stdout && (
-            <pre className="whitespace-pre-wrap">{result.stdout}</pre>
-          )}
-          {result.stderr && (
-            <pre className="whitespace-pre-wrap text-destructive">
-              {result.stderr}
-            </pre>
-          )}
-          {!result.stdout && !result.stderr && (
-            <span className="text-muted-foreground">
-              (no output — exit {result.success ? "0" : "non-zero"})
-            </span>
-          )}
-        </div>
-      )}
+      {result && <RunResultPanel result={result} />}
     </div>
   );
 }

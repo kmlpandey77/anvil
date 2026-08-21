@@ -357,6 +357,93 @@ echo $output;
     Ok(Members { members })
 }
 
+#[derive(Debug, Serialize)]
+struct ArtisanCommandInfo {
+    name: String,
+    description: String,
+}
+
+#[derive(Debug, Deserialize)]
+struct ArtisanListJson {
+    commands: Vec<ArtisanListCommand>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ArtisanListCommand {
+    name: String,
+    #[serde(default)]
+    description: String,
+}
+
+fn artisan_path(product: &Product) -> Result<PathBuf, String> {
+    let path = PathBuf::from(&product.path).join("artisan");
+    if !path.is_file() {
+        return Err(format!("No 'artisan' file found in {}", product.path));
+    }
+    Ok(path)
+}
+
+#[tauri::command]
+fn list_artisan_commands(app: AppHandle, product_id: String) -> Result<Vec<ArtisanCommandInfo>, String> {
+    let product = find_product(&app, &product_id)?;
+    let artisan = artisan_path(&product)?;
+
+    let output = Command::new(&product.php_binary)
+        .arg(&artisan)
+        .arg("list")
+        .arg("--format=json")
+        .current_dir(&product.path)
+        .output()
+        .map_err(|e| format!("failed to run '{}': {e}", product.php_binary))?;
+
+    if !output.status.success() {
+        let stderr = String::from_utf8_lossy(&output.stderr);
+        return Err(if stderr.is_empty() {
+            String::from_utf8_lossy(&output.stdout).to_string()
+        } else {
+            stderr.to_string()
+        });
+    }
+
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    let parsed: ArtisanListJson =
+        serde_json::from_str(&stdout).map_err(|e| format!("could not parse artisan output: {e}"))?;
+
+    Ok(parsed
+        .commands
+        .into_iter()
+        .map(|c| ArtisanCommandInfo {
+            name: c.name,
+            description: c.description,
+        })
+        .collect())
+}
+
+#[tauri::command]
+fn run_artisan_command(
+    app: AppHandle,
+    product_id: String,
+    command: String,
+    args: Vec<String>,
+) -> Result<RunResult, String> {
+    let product = find_product(&app, &product_id)?;
+    let artisan = artisan_path(&product)?;
+
+    let output = Command::new(&product.php_binary)
+        .arg(&artisan)
+        .arg(&command)
+        .args(&args)
+        .current_dir(&product.path)
+        .output()
+        .map_err(|e| format!("failed to run '{}': {e}", product.php_binary))?;
+
+    Ok(RunResult {
+        stdout: String::from_utf8_lossy(&output.stdout).to_string(),
+        stderr: String::from_utf8_lossy(&output.stderr).to_string(),
+        success: output.status.success(),
+    })
+}
+
 #[cfg(test)]
 mod tests {
     use super::{collect_classes, wrap_snippet};
@@ -407,7 +494,9 @@ pub fn run() {
             remove_product,
             run_snippet,
             list_symbols,
-            list_members
+            list_members,
+            list_artisan_commands,
+            run_artisan_command
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
