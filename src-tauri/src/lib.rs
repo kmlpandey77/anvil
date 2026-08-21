@@ -38,6 +38,71 @@ fn write_products(app: &AppHandle, products: &[Product]) -> Result<(), String> {
     fs::write(&file, raw).map_err(|e| e.to_string())
 }
 
+#[derive(Debug, Serialize, Deserialize, Clone)]
+struct Snippet {
+    id: String,
+    product_id: String,
+    name: String,
+    code: String,
+}
+
+fn snippets_file(app: &AppHandle) -> Result<PathBuf, String> {
+    let dir = app
+        .path()
+        .app_data_dir()
+        .map_err(|e| format!("could not resolve app data dir: {e}"))?;
+    fs::create_dir_all(&dir).map_err(|e| e.to_string())?;
+    Ok(dir.join("snippets.json"))
+}
+
+fn read_snippets(app: &AppHandle) -> Result<Vec<Snippet>, String> {
+    let file = snippets_file(app)?;
+    if !file.exists() {
+        return Ok(Vec::new());
+    }
+    let raw = fs::read_to_string(&file).map_err(|e| e.to_string())?;
+    serde_json::from_str(&raw).map_err(|e| e.to_string())
+}
+
+fn write_snippets(app: &AppHandle, snippets: &[Snippet]) -> Result<(), String> {
+    let file = snippets_file(app)?;
+    let raw = serde_json::to_string_pretty(snippets).map_err(|e| e.to_string())?;
+    fs::write(&file, raw).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+fn list_snippets(app: AppHandle, product_id: String) -> Result<Vec<Snippet>, String> {
+    Ok(read_snippets(&app)?
+        .into_iter()
+        .filter(|s| s.product_id == product_id)
+        .collect())
+}
+
+#[tauri::command]
+fn save_snippet(app: AppHandle, product_id: String, name: String, code: String) -> Result<Snippet, String> {
+    let name = name.trim();
+    if name.is_empty() {
+        return Err("Name is required.".into());
+    }
+    let mut snippets = read_snippets(&app)?;
+    let snippet = Snippet {
+        id: new_id(),
+        product_id,
+        name: name.to_string(),
+        code,
+    };
+    snippets.push(snippet.clone());
+    write_snippets(&app, &snippets)?;
+    Ok(snippet)
+}
+
+#[tauri::command]
+fn delete_snippet(app: AppHandle, id: String) -> Result<(), String> {
+    let mut snippets = read_snippets(&app)?;
+    snippets.retain(|s| s.id != id);
+    write_snippets(&app, &snippets)
+}
+
 fn new_id() -> String {
     let nanos = SystemTime::now()
         .duration_since(UNIX_EPOCH)
@@ -647,7 +712,10 @@ pub fn run() {
             list_artisan_commands,
             run_artisan_command,
             read_log_tail,
-            run_query
+            run_query,
+            list_snippets,
+            save_snippet,
+            delete_snippet
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

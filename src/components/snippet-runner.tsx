@@ -4,6 +4,7 @@ import type * as Monaco from "monaco-editor";
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
 import { RunResultPanel } from "@/components/run-result-panel";
+import { SnippetHistory } from "@/components/snippet-history";
 import { runSnippet, type RunResult } from "@/lib/run";
 import { listSymbols, registerPhpCompletionProviders, type Symbols } from "@/lib/symbols";
 import { useEditorSettings } from "@/lib/settings";
@@ -60,7 +61,8 @@ export function SnippetRunner({ product }: { product: Product }) {
 
   return (
     <div className="flex h-full flex-col">
-      <div className="flex items-center justify-end border-b px-4 py-2">
+      <div className="flex items-center justify-between border-b px-4 py-2">
+        <SnippetHistory product={product} code={code} onLoad={setCode} />
         <Button size="sm" onClick={run} disabled={running}>
           {running ? "Running…" : "Run (⌘⏎)"}
         </Button>
