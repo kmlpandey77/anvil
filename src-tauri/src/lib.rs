@@ -578,9 +578,53 @@ fn write_env(app: AppHandle, product_id: String, content: String) -> Result<(), 
     fs::write(env_path(&product), content).map_err(|e| e.to_string())
 }
 
+#[derive(Debug, Serialize)]
+struct AppStats {
+    version: String,
+    storage_bytes: u64,
+    ram_bytes: u64,
+}
+
+fn dir_size(dir: &std::path::Path) -> u64 {
+    let Ok(entries) = fs::read_dir(dir) else {
+        return 0;
+    };
+    entries
+        .filter_map(|e| e.ok())
+        .map(|e| {
+            let path = e.path();
+            if path.is_dir() {
+                dir_size(&path)
+            } else {
+                fs::metadata(&path).map(|m| m.len()).unwrap_or(0)
+            }
+        })
+        .sum()
+}
+
+#[tauri::command]
+fn get_app_stats(app: AppHandle) -> Result<AppStats, String> {
+    let dir = app
+        .path()
+        .app_data_dir()
+        .map_err(|e| format!("could not resolve app data dir: {e}"))?;
+    let storage_bytes = dir_size(&dir);
+
+    let pid = sysinfo::Pid::from_u32(std::process::id());
+    let mut system = sysinfo::System::new();
+    system.refresh_processes(sysinfo::ProcessesToUpdate::Some(&[pid]), true);
+    let ram_bytes = system.process(pid).map(|p| p.memory()).unwrap_or(0);
+
+    Ok(AppStats {
+        version: app.package_info().version.to_string(),
+        storage_bytes,
+        ram_bytes,
+    })
+}
+
 #[cfg(test)]
 mod tests {
-    use super::{collect_classes, newest_log_file, wrap_snippet};
+    use super::{collect_classes, dir_size, newest_log_file, wrap_snippet};
 
     #[test]
     fn wraps_simple_expressions() {
@@ -630,6 +674,17 @@ mod tests {
         assert_eq!(picked.file_name().unwrap(), "laravel-2024-01-02.log");
         std::fs::remove_dir_all(&dir).unwrap();
     }
+
+    #[test]
+    fn dir_size_sums_nested_files() {
+        let dir = std::env::temp_dir().join(format!("laravel-toolkit-test-{}", super::new_id()));
+        std::fs::create_dir_all(dir.join("nested")).unwrap();
+        std::fs::write(dir.join("a.json"), "1234567890").unwrap(); // 10 bytes
+        std::fs::write(dir.join("nested/b.json"), "12345").unwrap(); // 5 bytes
+
+        assert_eq!(dir_size(&dir), 15);
+        std::fs::remove_dir_all(&dir).unwrap();
+    }
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -653,7 +708,8 @@ pub fn run() {
             save_snippet,
             delete_snippet,
             read_env,
-            write_env
+            write_env,
+            get_app_stats
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

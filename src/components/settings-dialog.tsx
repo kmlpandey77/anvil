@@ -1,5 +1,6 @@
 import { Settings } from "lucide-react";
 import { useTheme } from "next-themes";
+import { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -18,13 +19,19 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { FONT_FAMILIES, useEditorSettings } from "@/lib/settings";
+import { getAppStats, formatBytes, type AppStats } from "@/lib/app-stats";
 
 export function SettingsDialog() {
   const { theme, setTheme } = useTheme();
   const { fontSize, setFontSize, fontFamily, setFontFamily } = useEditorSettings();
+  const [stats, setStats] = useState<AppStats | null>(null);
 
   return (
-    <Dialog>
+    <Dialog
+      onOpenChange={(open) => {
+        if (open) getAppStats().then(setStats).catch(() => setStats(null));
+      }}
+    >
       <DialogTrigger asChild>
         <Button variant="ghost" size="icon" className="h-8 w-8">
           <Settings className="h-4 w-4" />
@@ -73,6 +80,27 @@ export function SettingsDialog() {
               value={fontSize}
               onChange={(e) => setFontSize(Number(e.target.value) || fontSize)}
             />
+          </div>
+          <div className="space-y-2 border-t pt-4">
+            <Label>About</Label>
+            {stats ? (
+              <div className="space-y-1 text-sm text-muted-foreground">
+                <div className="flex justify-between">
+                  <span>Anvil</span>
+                  <span>v{stats.version}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Storage used</span>
+                  <span>{formatBytes(stats.storage_bytes)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Memory used</span>
+                  <span>{formatBytes(stats.ram_bytes)}</span>
+                </div>
+              </div>
+            ) : (
+              <p className="text-sm text-muted-foreground">Loading…</p>
+            )}
           </div>
         </div>
       </DialogContent>
