@@ -3,6 +3,7 @@ import { ProjectsHome } from "@/components/projects-home";
 import { ProductWorkspace } from "@/components/product-workspace";
 import { Toaster } from "@/components/ui/sonner";
 import { listProducts, type Product } from "@/lib/products";
+import { checkForUpdate } from "@/lib/updater";
 import { toast } from "sonner";
 
 function App() {
@@ -13,6 +14,26 @@ function App() {
     listProducts()
       .then(setProducts)
       .catch((e) => toast.error(String(e)));
+  }, []);
+
+  useEffect(() => {
+    checkForUpdate()
+      .then((update) => {
+        if (!update) return;
+        toast(`Anvil ${update.version} is available`, {
+          action: {
+            label: "Install & restart",
+            onClick: () => {
+              toast.promise(update.install(), {
+                loading: "Installing update…",
+                success: "Restarting…",
+                error: (e) => String(e),
+              });
+            },
+          },
+        });
+      })
+      .catch((e) => console.error("update check failed", e));
   }, []);
 
   const selected = products.find((p) => p.id === selectedId) ?? null;
