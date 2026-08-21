@@ -1,6 +1,7 @@
 import { ArrowLeft, Code2, KeyRound, ScrollText, Terminal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SettingsDialog } from "@/components/settings-dialog";
+import { AboutDialog } from "@/components/about-dialog";
 import { cn } from "@/lib/utils";
 
 export type WorkspaceSection = "tinker" | "artisan" | "logs" | "env";
@@ -40,6 +41,7 @@ export function WorkspaceNav({
           </Button>
         ))}
       </div>
+      <AboutDialog />
       <SettingsDialog />
     </div>
   );
