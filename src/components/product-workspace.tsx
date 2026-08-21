@@ -1,6 +1,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { SnippetRunner } from "@/components/snippet-runner";
 import { ArtisanRunner } from "@/components/artisan-runner";
+import { LogViewer } from "@/components/log-viewer";
 import type { Product } from "@/lib/products";
 
 export function ProductWorkspace({ product }: { product: Product }) {
@@ -11,6 +12,7 @@ export function ProductWorkspace({ product }: { product: Product }) {
         <TabsList>
           <TabsTrigger value="tinker">Tinker</TabsTrigger>
           <TabsTrigger value="artisan">Artisan</TabsTrigger>
+          <TabsTrigger value="logs">Logs</TabsTrigger>
         </TabsList>
       </div>
       <TabsContent value="tinker" className="flex-1 overflow-hidden">
@@ -18,6 +20,9 @@ export function ProductWorkspace({ product }: { product: Product }) {
       </TabsContent>
       <TabsContent value="artisan" className="flex-1 overflow-hidden">
         <ArtisanRunner product={product} />
+      </TabsContent>
+      <TabsContent value="logs" className="flex-1 overflow-hidden">
+        <LogViewer product={product} />
       </TabsContent>
     </Tabs>
   );

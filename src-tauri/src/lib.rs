@@ -1,5 +1,6 @@
 use serde::{Deserialize, Serialize};
 use std::fs;
+use std::io::{Read, Seek, SeekFrom};
 use std::path::PathBuf;
 use std::process::Command;
 use std::time::{SystemTime, UNIX_EPOCH};
@@ -444,9 +445,45 @@ fn run_artisan_command(
     })
 }
 
+const LOG_TAIL_MAX_BYTES: u64 = 100_000;
+
+// Picks the most recently modified *.log in a directory — covers both
+// Laravel's default single laravel.log and the "daily" driver's rotated
+// laravel-YYYY-MM-DD.log files.
+fn newest_log_file(logs_dir: &PathBuf) -> Option<PathBuf> {
+    let entries = fs::read_dir(logs_dir).ok()?;
+    entries
+        .flatten()
+        .filter(|e| e.path().extension().and_then(|s| s.to_str()) == Some("log"))
+        .filter_map(|e| {
+            let modified = e.metadata().ok()?.modified().ok()?;
+            Some((e.path(), modified))
+        })
+        .max_by_key(|(_, modified)| *modified)
+        .map(|(path, _)| path)
+}
+
+#[tauri::command]
+fn read_log_tail(app: AppHandle, product_id: String) -> Result<String, String> {
+    let product = find_product(&app, &product_id)?;
+    let logs_dir = PathBuf::from(&product.path).join("storage/logs");
+    let path = newest_log_file(&logs_dir)
+        .ok_or_else(|| format!("No .log files found in {}", logs_dir.display()))?;
+
+    let mut file = fs::File::open(&path).map_err(|e| e.to_string())?;
+    let len = file.metadata().map_err(|e| e.to_string())?.len();
+    let start = len.saturating_sub(LOG_TAIL_MAX_BYTES);
+    file.seek(SeekFrom::Start(start)).map_err(|e| e.to_string())?;
+
+    let mut buf = Vec::new();
+    file.read_to_end(&mut buf).map_err(|e| e.to_string())?;
+
+    Ok(String::from_utf8_lossy(&buf).to_string())
+}
+
 #[cfg(test)]
 mod tests {
-    use super::{collect_classes, wrap_snippet};
+    use super::{collect_classes, newest_log_file, wrap_snippet};
 
     #[test]
     fn wraps_simple_expressions() {
@@ -481,6 +518,21 @@ mod tests {
         assert_eq!(out, vec!["App\\Helper", "App\\Models\\User"]);
         std::fs::remove_dir_all(&dir).unwrap();
     }
+
+    #[test]
+    fn newest_log_file_picks_most_recently_modified_dot_log() {
+        let dir = std::env::temp_dir().join(format!("laravel-toolkit-test-{}", super::new_id()));
+        std::fs::create_dir_all(&dir).unwrap();
+        std::fs::write(dir.join("laravel-2024-01-01.log"), "old").unwrap();
+        std::thread::sleep(std::time::Duration::from_millis(10));
+        std::fs::write(dir.join("laravel-2024-01-02.log"), "new").unwrap();
+        std::fs::write(dir.join("not-a-log.txt"), "ignored").unwrap();
+
+        let picked = newest_log_file(&dir).unwrap();
+
+        assert_eq!(picked.file_name().unwrap(), "laravel-2024-01-02.log");
+        std::fs::remove_dir_all(&dir).unwrap();
+    }
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -496,7 +548,8 @@ pub fn run() {
             list_symbols,
             list_members,
             list_artisan_commands,
-            run_artisan_command
+            run_artisan_command,
+            read_log_tail
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
