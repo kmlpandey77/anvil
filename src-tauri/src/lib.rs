@@ -162,8 +162,10 @@ struct RunResult {
 }
 
 // ponytail: naive single-line-expression heuristic (no newline/`;` inside,
-// doesn't start with a statement keyword) auto-wraps in var_dump so common
-// one-liners like `1+1` or `User::count()` print without an explicit dump()/echo.
+// doesn't start with a statement keyword) auto-wraps in dump() (Laravel's
+// pretty, collapsible dd()-style output — see VAR_DUMPER_FORMAT in exec_php)
+// so common one-liners like `1+1` or `User::count()` print without an
+// explicit dump()/echo.
 // Real REPL semantics (auto-print last expression of any snippet) would need a
 // PHP parser — most Laravel apps already ship psy/psysh via laravel/tinker,
 // which could replace this whole wrap_snippet approach if it's ever worth it.
@@ -184,7 +186,7 @@ fn wrap_snippet(code: &str) -> String {
     {
         code.to_string()
     } else {
-        format!("var_dump({body});")
+        format!("dump({body});")
     }
 }
 
@@ -204,6 +206,12 @@ fn exec_php(product: &Product, script: &str) -> Result<RunResult, String> {
     let result = Command::new(&product.php_binary)
         .arg(&tmp)
         .current_dir(&project_path)
+        // Forces Symfony VarDumper (dump()/dd() — always available, it's a
+        // dependency of laravel/framework) to emit its rich HTML dump
+        // instead of the plain CLI/ANSI format it'd otherwise pick for a
+        // `php script.php` process. The frontend renders stdout in a
+        // sandboxed iframe for exactly this reason.
+        .env("VAR_DUMPER_FORMAT", "html")
         .output();
 
     let _ = fs::remove_file(&tmp);
@@ -555,17 +563,17 @@ mod tests {
 
     #[test]
     fn wraps_simple_expressions() {
-        assert_eq!(wrap_snippet("1+1"), "var_dump(1+1);");
-        assert_eq!(wrap_snippet("User::count()"), "var_dump(User::count());");
-        assert_eq!(wrap_snippet("$x"), "var_dump($x);");
+        assert_eq!(wrap_snippet("1+1"), "dump(1+1);");
+        assert_eq!(wrap_snippet("User::count()"), "dump(User::count());");
+        assert_eq!(wrap_snippet("$x"), "dump($x);");
     }
 
     #[test]
     fn leaves_statements_and_multiline_untouched() {
         assert_eq!(wrap_snippet("echo 1;"), "echo 1;");
-        // single assignment IS wrapped: var_dump($x = 1) both assigns and shows
+        // single assignment IS wrapped: dump($x = 1) both assigns and shows
         // the value, matching REPL expectations.
-        assert_eq!(wrap_snippet("$x = 1;"), "var_dump($x = 1);");
+        assert_eq!(wrap_snippet("$x = 1;"), "dump($x = 1);");
         assert_eq!(wrap_snippet("$x = 1;\n$y = 2;"), "$x = 1;\n$y = 2;");
         assert_eq!(wrap_snippet("if (true) { echo 1; }"), "if (true) { echo 1; }");
     }

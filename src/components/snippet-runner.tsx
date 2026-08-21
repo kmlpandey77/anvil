@@ -84,7 +84,7 @@ export function SnippetRunner({ product }: { product: Product }) {
           />
         </div>
         <div className="w-1/2">
-          <RunResultPanel result={result} />
+          <RunResultPanel result={result} renderHtml />
         </div>
       </div>
     </div>

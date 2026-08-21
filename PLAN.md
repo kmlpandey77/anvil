@@ -62,6 +62,14 @@ Replaced the always-visible product-list sidebar + `Tabs` bar with two distinct 
 - Tinker and Artisan both moved from a stacked (editor-on-top, output-below) layout to two columns side by side — `RunResultPanel` changed from `max-h-64` (bottom strip) to `h-full border-l` (right column) and now accepts `result: RunResult | null` directly, rendering a "Run to see output" placeholder instead of being conditionally omitted.
 - Caught one real layout bug via a mocked-Tauri browser test before considering this done: `ProductWorkspace`'s root `<div>` had no `w-full`/`flex-1`, so as a flex item of `<main>` it shrank to fit its content instead of filling the screen — the whole workspace rendered in a ~380px strip with everything else black. One-line fix (`w-full` on the root div).
 
+### Beautiful dd()-style output — shipped
+
+Tinker's auto-wrap heuristic (`wrap_snippet`) switched from `var_dump()` to `dump()`, and `exec_php` now sets `VAR_DUMPER_FORMAT=html` when spawning `php`. Both dump() and Laravel's `dd()` are Symfony VarDumper under the hood (already a `laravel/framework` dependency, no new PHP package) — normally it picks the plain ANSI CLI dumper for a `php script.php` process, but that env var forces its HTML dumper instead: a self-contained `<pre class=sf-dump>` fragment with inline `<style>`/`<script>` for the collapsible tree, colors, everything `dd()` looks like on a web page.
+
+Frontend renders Tinker's stdout in a sandboxed `<iframe sandbox="allow-scripts" srcDoc={...}>` (`RunResultPanel`'s new `renderHtml` prop) — fully isolated from the app's own DOM/CSS/JS, with `allow-scripts` (but not `allow-same-origin`) so the dumper's own collapse/expand toggle script still works without being able to touch the parent page. Plain `echo`'d text (non-dump output) renders fine too, since browsers handle bare text nodes in an HTML document without issue. Artisan's `RunResultPanel` does **not** pass `renderHtml` — command output (e.g. `route:list`) contains literal `<id>`-style placeholders that would get misinterpreted as HTML tags, so it stays plain `<pre>` text.
+
+Verified the whole pipeline end to end before wiring up the frontend: confirmed `VAR_DUMPER_FORMAT=html` actually forces HTML output for a plain `php` CLI process (a standalone `symfony/var-dumper` fixture), then again through the full `bootstrap_header` + Kernel-boot path (a fake Laravel project fixture, same pattern used for `run_snippet` originally), then visually in a real browser against a captured real `dump()` HTML sample — including clicking the collapse/expand arrow to confirm the sandboxed script actually runs.
+
 ## Tech stack
 
 - **Shell**: Tauri v2 (Rust backend, plain `std::process::Command` for spawning `php` — no shell plugin needed, we're not running arbitrary shell commands).
@@ -95,6 +103,7 @@ type Product = {
 8. ✅ **Log tailing**: `read_log_tail` (find newest `storage/logs/*.log`, read its tail), frontend polls every ~2s while the Logs section is mounted.
 9. ✅ **Snippet history**: `snippets.json` in the app data dir (same pattern as `products.json`), keyed by product — save/load/delete named snippets from the Tinker section.
 10. ✅ **Navigation redesign**: card-grid landing page (`ProjectsHome`) + icon-only nav rail per selected product (`WorkspaceNav`: Tinker/Artisan/Logs), replacing the always-visible product sidebar + top `Tabs` bar. Tinker and Artisan restructured into two columns (code/input left, result right). DB/table browser removed.
-11. **Polish** (only if actually needed after using it): keyboard shortcuts beyond ⌘Enter, richer error states.
+11. ✅ **Beautiful dd()-style output**: `VAR_DUMPER_FORMAT=html` + `dump()` instead of `var_dump()`, rendered in a sandboxed iframe on the Tinker section only.
+12. **Polish** (only if actually needed after using it): keyboard shortcuts beyond ⌘Enter, richer error states.
 
 Each milestone should be a working app, not a stub.
