@@ -1,0 +1,197 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-21T08:32:47Z",
+  "title": "Design System: Laravel Toolkit",
+  "extensions": {
+    "colorMeta": {
+      "ink": {
+        "role": "primary",
+        "displayName": "Ink",
+        "canonical": "oklch(0.205 0 0)",
+        "tonalRamp": ["oklch(0.15 0 0)", "oklch(0.205 0 0)", "oklch(0.30 0 0)", "oklch(0.40 0 0)", "oklch(0.50 0 0)", "oklch(0.65 0 0)", "oklch(0.80 0 0)", "oklch(0.95 0 0)"]
+      },
+      "ink-foreground": {
+        "role": "primary-foreground",
+        "displayName": "Ink Foreground",
+        "canonical": "oklch(0.985 0 0)",
+        "tonalRamp": ["oklch(0.15 0 0)", "oklch(0.205 0 0)", "oklch(0.30 0 0)", "oklch(0.40 0 0)", "oklch(0.50 0 0)", "oklch(0.65 0 0)", "oklch(0.80 0 0)", "oklch(0.985 0 0)"]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Paper",
+        "canonical": "oklch(1 0 0)",
+        "tonalRamp": ["oklch(0.15 0 0)", "oklch(0.30 0 0)", "oklch(0.45 0 0)", "oklch(0.60 0 0)", "oklch(0.75 0 0)", "oklch(0.90 0 0)", "oklch(0.97 0 0)", "oklch(1 0 0)"]
+      },
+      "paper-foreground": {
+        "role": "neutral",
+        "displayName": "Paper Foreground",
+        "canonical": "oklch(0.145 0 0)",
+        "tonalRamp": ["oklch(0.145 0 0)", "oklch(0.25 0 0)", "oklch(0.40 0 0)", "oklch(0.55 0 0)", "oklch(0.70 0 0)", "oklch(0.82 0 0)", "oklch(0.92 0 0)", "oklch(0.98 0 0)"]
+      },
+      "fog": {
+        "role": "neutral",
+        "displayName": "Fog",
+        "canonical": "oklch(0.97 0 0)",
+        "tonalRamp": ["oklch(0.20 0 0)", "oklch(0.32 0 0)", "oklch(0.46 0 0)", "oklch(0.60 0 0)", "oklch(0.75 0 0)", "oklch(0.88 0 0)", "oklch(0.94 0 0)", "oklch(0.97 0 0)"]
+      },
+      "slate": {
+        "role": "neutral",
+        "displayName": "Slate",
+        "canonical": "oklch(0.556 0 0)",
+        "tonalRamp": ["oklch(0.18 0 0)", "oklch(0.30 0 0)", "oklch(0.42 0 0)", "oklch(0.556 0 0)", "oklch(0.65 0 0)", "oklch(0.75 0 0)", "oklch(0.85 0 0)", "oklch(0.93 0 0)"]
+      },
+      "hairline": {
+        "role": "neutral",
+        "displayName": "Hairline",
+        "canonical": "oklch(0.922 0 0)",
+        "tonalRamp": ["oklch(0.20 0 0)", "oklch(0.34 0 0)", "oklch(0.48 0 0)", "oklch(0.62 0 0)", "oklch(0.76 0 0)", "oklch(0.87 0 0)", "oklch(0.922 0 0)", "oklch(0.96 0 0)"]
+      },
+      "steel": {
+        "role": "neutral",
+        "displayName": "Steel",
+        "canonical": "oklch(0.708 0 0)",
+        "tonalRamp": ["oklch(0.20 0 0)", "oklch(0.34 0 0)", "oklch(0.48 0 0)", "oklch(0.62 0 0)", "oklch(0.708 0 0)", "oklch(0.80 0 0)", "oklch(0.88 0 0)", "oklch(0.95 0 0)"]
+      },
+      "signal-red": {
+        "role": "destructive",
+        "displayName": "Signal Red",
+        "canonical": "oklch(0.577 0.245 27.325)",
+        "tonalRamp": ["oklch(0.20 0.10 27.325)", "oklch(0.32 0.15 27.325)", "oklch(0.45 0.20 27.325)", "oklch(0.577 0.245 27.325)", "oklch(0.65 0.22 27.325)", "oklch(0.72 0.19 22.216)", "oklch(0.80 0.14 22.216)", "oklch(0.90 0.08 22.216)"]
+      }
+    },
+    "typographyMeta": {
+      "title": { "displayName": "Title", "purpose": "Card titles and the product-name header at the top of a workspace. The only text above body size in the app." },
+      "body": { "displayName": "Body", "purpose": "Default text for labels, buttons, list items, and form fields." },
+      "label": { "displayName": "Label / Mono", "purpose": "Code-like content: PHP output, file paths, log lines, Artisan command names, saved snippets." }
+    },
+    "shadows": [
+      { "name": "anchored-menu", "value": "shadow-md + ring-1 ring-foreground/10", "purpose": "The only surfaces that carry a real shadow: popovers and select dropdowns. Never used on in-flow surfaces (cards, buttons) or on modals — see The Grounded Rule." },
+      { "name": "modal", "value": "ring-1 ring-foreground/10 only, no shadow, over bg-black/10 backdrop blur", "purpose": "Dialog / Alert Dialog. Depth comes from the dimmed backdrop behind the panel, not a shadow on the panel itself." }
+    ],
+    "motion": [
+      { "name": "overlay-transition", "value": "duration-100 (fade/zoom via tw-animate-css data-open/data-closed variants)", "purpose": "Fast, near-instant open/close for popovers, dialogs, and dropdowns — a tool that reacts immediately, not a marketing surface with lingering transitions." }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Default action button — Ink background, inverts with theme.",
+      "html": "<button class=\"ds-btn-primary\">Run</button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; height: 32px; padding: 0 10px; gap: 6px; border-radius: 10px; border: none; background: #363636; color: #fafafa; font-family: 'Geist Variable', sans-serif; font-size: 14px; font-weight: 500; transition: background-color 0.15s, opacity 0.15s; } .ds-btn-primary:hover { opacity: 0.8; } .ds-btn-primary:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(180,180,180,0.5); } .ds-btn-primary:active { transform: translateY(1px); }"
+    },
+    {
+      "name": "Outline Button",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Secondary action button with a hairline border, fills to Fog on hover.",
+      "html": "<button class=\"ds-btn-outline\">Reload</button>",
+      "css": ".ds-btn-outline { display: inline-flex; align-items: center; justify-content: center; height: 32px; padding: 0 10px; gap: 6px; border-radius: 10px; border: 1px solid #e8e8e8; background: #ffffff; color: #252525; font-family: 'Geist Variable', sans-serif; font-size: 14px; font-weight: 500; transition: background-color 0.15s; } .ds-btn-outline:hover { background: #f7f7f7; } .ds-btn-outline:focus-visible { outline: none; border-color: #b5b5b5; box-shadow: 0 0 0 3px rgba(180,180,180,0.5); }"
+    },
+    {
+      "name": "Ghost Icon Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Icon-only button used in the nav rail and row-hover actions (e.g. delete).",
+      "html": "<button class=\"ds-btn-ghost\" title=\"Settings\" aria-label=\"Settings\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"12\" r=\"3\"/><path d=\"M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z\"/></svg></button>",
+      "css": ".ds-btn-ghost { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 10px; border: none; background: transparent; color: #252525; transition: background-color 0.15s; } .ds-btn-ghost:hover { background: #f7f7f7; } .ds-btn-ghost[data-active=\"true\"] { background: #f7f7f7; }"
+    },
+    {
+      "name": "Destructive Button",
+      "kind": "button",
+      "refersTo": "button-destructive",
+      "description": "Delete/remove actions — the only place Signal Red appears.",
+      "html": "<button class=\"ds-btn-destructive\">Remove</button>",
+      "css": ".ds-btn-destructive { display: inline-flex; align-items: center; justify-content: center; height: 32px; padding: 0 10px; border-radius: 10px; border: none; background: color-mix(in oklch, oklch(0.577 0.245 27.325), transparent 90%); color: oklch(0.577 0.245 27.325); font-family: 'Geist Variable', sans-serif; font-size: 14px; font-weight: 500; transition: background-color 0.15s; } .ds-btn-destructive:hover { background: color-mix(in oklch, oklch(0.577 0.245 27.325), transparent 80%); }"
+    },
+    {
+      "name": "Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Text field — transparent fill, hairline border, glow-ring focus.",
+      "html": "<input class=\"ds-input\" type=\"text\" placeholder=\"Filter commands…\" />",
+      "css": ".ds-input { height: 32px; width: 100%; padding: 4px 10px; border-radius: 10px; border: 1px solid #e8e8e8; background: transparent; color: #252525; font-family: 'Geist Variable', sans-serif; font-size: 14px; transition: border-color 0.15s, box-shadow 0.15s; } .ds-input::placeholder { color: #8e8e8e; } .ds-input:focus-visible { outline: none; border-color: #b5b5b5; box-shadow: 0 0 0 3px rgba(180,180,180,0.5); } .ds-input:disabled { opacity: 0.5; background: rgba(232,232,232,0.5); cursor: not-allowed; }"
+    },
+    {
+      "name": "Field Label",
+      "kind": "custom",
+      "description": "Sits above a field; dims with its field's disabled state rather than staying static.",
+      "html": "<label class=\"ds-label\" for=\"example\">Project path</label>",
+      "css": ".ds-label { display: flex; align-items: center; gap: 8px; font-family: 'Geist Variable', sans-serif; font-size: 14px; font-weight: 500; line-height: 1; color: #252525; user-select: none; } .ds-label[data-disabled=\"true\"] { opacity: 0.5; pointer-events: none; }"
+    },
+    {
+      "name": "Dropdown (Select)",
+      "kind": "custom",
+      "description": "Anchored floating menu — trigger matches Input exactly; menu carries the system's only earned shadow.",
+      "html": "<div class=\"ds-select\"><button class=\"ds-select-trigger\">System <span>▾</span></button><div class=\"ds-select-menu\"><div class=\"ds-select-item\">Light</div><div class=\"ds-select-item\" data-active=\"true\">Dark</div><div class=\"ds-select-item\">System</div></div></div>",
+      "css": ".ds-select-trigger { display: inline-flex; align-items: center; justify-content: space-between; gap: 8px; height: 32px; width: 100%; padding: 4px 10px; border-radius: 10px; border: 1px solid #e8e8e8; background: transparent; color: #252525; font-family: 'Geist Variable', sans-serif; font-size: 14px; } .ds-select-menu { margin-top: 4px; min-width: 144px; padding: 4px; border-radius: 10px; background: #ffffff; box-shadow: 0 4px 12px rgba(0,0,0,0.08); box-shadow: 0 4px 12px rgba(0,0,0,0.08), 0 0 0 1px rgba(37,37,37,0.10); } .ds-select-item { padding: 6px 8px; border-radius: 8px; font-size: 14px; color: #252525; cursor: pointer; } .ds-select-item:hover, .ds-select-item[data-active=\"true\"] { background: #f7f7f7; }"
+    },
+    {
+      "name": "Floating Menu (Popover)",
+      "kind": "custom",
+      "description": "Same anchored-menu shadow treatment as Select; hosts the snippet-history list + inline save form.",
+      "html": "<div class=\"ds-popover\"><div class=\"ds-popover-row\"><input class=\"ds-input\" placeholder=\"Save current as…\" /><button class=\"ds-btn-primary\">Save</button></div><div class=\"ds-select-item\">count users</div></div>",
+      "css": ".ds-popover { width: 288px; padding: 8px; border-radius: 10px; background: #ffffff; box-shadow: 0 4px 12px rgba(0,0,0,0.08), 0 0 0 1px rgba(37,37,37,0.10); } .ds-popover-row { display: flex; gap: 8px; padding-bottom: 8px; margin-bottom: 8px; border-bottom: 1px solid #e8e8e8; }"
+    },
+    {
+      "name": "Modal (Dialog / Alert Dialog)",
+      "kind": "custom",
+      "description": "Ring-only, not shadowed — depth comes from the dimmed backdrop, not the panel (see The Grounded Rule).",
+      "html": "<div class=\"ds-modal-backdrop\"><div class=\"ds-modal\"><div class=\"ds-modal-title\">Remove \"cci-backend\"?</div><div class=\"ds-modal-desc\">This only removes the saved connection — nothing on disk is touched.</div><div class=\"ds-modal-actions\"><button class=\"ds-btn-outline\">Cancel</button><button class=\"ds-btn-destructive\">Remove</button></div></div></div>",
+      "css": ".ds-modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.10); backdrop-filter: blur(2px); display: flex; align-items: center; justify-content: center; } .ds-modal { width: 100%; max-width: 384px; padding: 16px; border-radius: 14px; background: #ffffff; box-shadow: 0 0 0 1px rgba(37,37,37,0.10); display: flex; flex-direction: column; gap: 16px; } .ds-modal-title { font-size: 16px; font-weight: 500; color: #252525; } .ds-modal-desc { font-size: 14px; color: #8e8e8e; } .ds-modal-actions { display: flex; justify-content: flex-end; gap: 8px; }"
+    },
+    {
+      "name": "Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Flat container with a hairline ring instead of a shadow — the incumbent project card and settings-panel container.",
+      "html": "<div class=\"ds-card\"><div class=\"ds-card-title\">cci-backend</div><div class=\"ds-card-desc\">/home/user/projects/cci-backend</div></div>",
+      "css": ".ds-card { display: flex; flex-direction: column; gap: 16px; padding: 16px; border-radius: 14px; background: #ffffff; box-shadow: 0 0 0 1px rgba(37,37,37,0.10); font-family: 'Geist Variable', sans-serif; } .ds-card:hover { box-shadow: 0 0 0 1px rgba(37,37,37,0.10), 0 0 0 1px #252525; } .ds-card-title { font-size: 16px; font-weight: 500; line-height: 1.375; color: #252525; } .ds-card-desc { font-size: 12px; font-family: ui-monospace, Menlo, Consolas, monospace; color: #8e8e8e; }"
+    },
+    {
+      "name": "Result Panel (Rich)",
+      "kind": "custom",
+      "description": "Tinker's output column — dd()-style HTML rendered in a sandboxed iframe, distinct from Artisan's plain-text panel.",
+      "html": "<div class=\"ds-result-panel\"><div class=\"ds-result-empty\">Run to see output.</div></div>",
+      "css": ".ds-result-panel { height: 100%; overflow: hidden; display: flex; flex-direction: column; border-left: 1px solid #e8e8e8; background: rgba(247,247,247,0.3); } .ds-result-empty { padding: 16px; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 12px; color: #8e8e8e; }"
+    },
+    {
+      "name": "Scroll Area",
+      "kind": "custom",
+      "description": "Thumb-only scrollbar, no visible track — used for the Artisan command list and snippet-history list.",
+      "html": "<div class=\"ds-scroll\"><div class=\"ds-scroll-thumb\"></div></div>",
+      "css": ".ds-scroll { position: relative; width: 10px; height: 100%; padding: 1px; } .ds-scroll-thumb { position: relative; flex: 1; width: 100%; border-radius: 9999px; background: #e8e8e8; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Bare Terminal",
+    "overview": "No accent color has been chosen. This is deliberate, not unfinished: the interface is a monochrome instrument for reading PHP output and moving between a handful of tools, and any color would compete with the one thing that actually needs it — the syntax-highlighted editor and the dd()-style dump output at the center of the screen. The system runs on shadcn/ui's stock \"Nova\" style with a neutral base color, unmodified. That is itself the choice: reach for a customized palette only when a real reason to differentiate shows up, not by default.\n\nDensity is tight and utilitarian — an icon-only 56px nav rail, 32px controls, 12–14px text almost everywhere. Surfaces sit flat at rest; the only depth cue is a 1px ring, reserved for transient overlays. The one spot of intentional color in the entire system is destructive red, and it appears only on actions that delete something.",
+    "keyCharacteristics": [
+      "Fully achromatic outside destructive red — no brand color exists yet.",
+      "One typeface (Geist Variable) for every UI role; monospace only for code, paths, and command/log output.",
+      "Flat by default; shadow is reserved for things that float above the page, never for things that sit on it.",
+      "Small, dense controls (32px buttons/inputs) sized for a desktop tool, not a touch surface."
+    ],
+    "rules": [
+      { "name": "The One Color Rule", "body": "Signal Red is the only chromatic color anywhere in the system, and it means exactly one thing: destructive. Nothing else — not a status, not an accent, not a link — may use it.", "section": "colors" },
+      { "name": "The One Face Rule", "body": "Every UI role uses Geist Variable. The only typeface switch in the whole app is UI → monospace, and it switches for a reason (this is code / this is a path), never for decoration.", "section": "typography" },
+      { "name": "The Two-Column Rule", "body": "Tinker and Artisan split their content area exactly in half: input/code on the left, result on the right, full height, divided by a hairline. Nothing else invents a third layout pattern.", "section": "layout" },
+      { "name": "The Grounded Rule", "body": "A surface in the page's normal flow stays flat — a ring, never a shadow. An anchored menu (popover, select) earns a shadow because it has nothing behind it to read as \"above\" the page. A modal doesn't need one: the dimmed backdrop already does that job, so the panel itself stays ring-only, same as a card.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do keep every new UI surface achromatic (Paper/Ink/Fog/Slate/Hairline/Steel) unless a deliberate decision introduces a real accent color.",
+      "Do use a 1px ring for any surface that sits in normal page flow, and reserve shadow-md for content that floats above it and can be dismissed.",
+      "Do keep new \"result\"-shaped output in the two-column layout (input left, result right) rather than stacking vertically.",
+      "Do switch to the monospace stack for anything code-like and keep everything else in Geist Variable.",
+      "Do size new interactive controls to the existing 32px/24–28px/36px button scale."
+    ],
+    "donts": [
+      "Don't give a card or button a shadow at rest — that breaks the flat/ring elevation model in one visible move.",
+      "Don't introduce Signal Red for anything other than a destructive action.",
+      "Don't render Artisan (or any command-output) stdout as HTML — only Tinker's dump output is sandboxed and safe to interpret as markup.",
+      "Don't add a second typeface beyond the monospace exception.",
+      "Don't design for phone/tablet breakpoints — this is a native desktop window, not a public site."
+    ]
+  }
+}
