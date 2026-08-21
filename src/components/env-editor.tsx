@@ -52,7 +52,7 @@ export function EnvEditor({ product }: { product: Product }) {
 
   return (
     <div className="flex h-full flex-col">
-      <div className="flex items-center justify-between border-b px-4 py-2">
+      <div className="flex items-center justify-between border-b px-6 py-3">
         <span className="text-xs text-muted-foreground">
           .env{dirty && " — unsaved changes"}
         </span>

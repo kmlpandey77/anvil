@@ -56,7 +56,7 @@ export function ArtisanRunner({ product }: { product: Product }) {
   return (
     <div className="flex h-full">
       <div className="flex w-1/2 flex-col overflow-hidden">
-        <div className="flex items-center gap-2 border-b p-3">
+        <div className="flex items-center gap-2.5 border-b p-4">
           <Input
             ref={argsRef}
             placeholder={selected ? `${selected} arguments / options` : "Select a command below"}
@@ -72,7 +72,7 @@ export function ArtisanRunner({ product }: { product: Product }) {
             {running ? "Running…" : "Run (⏎)"}
           </Button>
         </div>
-        <div className="p-3 pb-0">
+        <div className="p-4 pb-0">
           <Input
             placeholder="Filter commands…"
             value={filter}
@@ -80,7 +80,7 @@ export function ArtisanRunner({ product }: { product: Product }) {
           />
         </div>
         <ScrollArea className="flex-1">
-          <div className="flex flex-col gap-0.5 p-3">
+          <div className="flex flex-col gap-1 p-4">
             {filtered.map((c) => (
               <button
                 key={c.name}
@@ -89,7 +89,7 @@ export function ArtisanRunner({ product }: { product: Product }) {
                   argsRef.current?.focus();
                 }}
                 className={cn(
-                  "rounded-md px-2 py-1.5 text-left text-sm hover:bg-accent",
+                  "rounded-md px-3 py-2 text-left text-sm hover:bg-accent",
                   selected === c.name && "bg-accent",
                 )}
               >
@@ -100,7 +100,7 @@ export function ArtisanRunner({ product }: { product: Product }) {
               </button>
             ))}
             {commands.length > 0 && filtered.length === 0 && (
-              <p className="px-2 py-1.5 text-sm text-muted-foreground">
+              <p className="px-3 py-2 text-sm text-muted-foreground">
                 No matching commands.
               </p>
             )}

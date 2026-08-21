@@ -70,7 +70,7 @@ export function SnippetRunner({ product }: { product: Product }) {
 
   return (
     <div className="flex h-full flex-col">
-      <div className="flex items-center justify-between border-b px-4 py-2">
+      <div className="flex items-center justify-between border-b px-6 py-3">
         <SnippetHistory product={product} code={code} onLoad={setCode} />
         <div className="flex items-center gap-2.5">
           <StatusDot status={status} />

@@ -23,11 +23,11 @@ export function WorkspaceNav({
   onBack: () => void;
 }) {
   return (
-    <div className="flex h-full w-14 flex-col items-center border-r py-3">
-      <Button variant="ghost" size="icon" className="mb-3 h-9 w-9" title="Back to projects" onClick={onBack}>
+    <div className="flex h-full w-16 flex-col items-center border-r py-4">
+      <Button variant="ghost" size="icon" className="mb-4 h-9 w-9" title="Back to projects" onClick={onBack}>
         <ArrowLeft className="h-4 w-4" />
       </Button>
-      <div className="flex flex-1 flex-col gap-1">
+      <div className="flex flex-1 flex-col gap-1.5">
         {SECTIONS.map(({ id, label, icon: Icon }) => (
           <Button
             key={id}

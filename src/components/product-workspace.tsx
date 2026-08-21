@@ -19,7 +19,7 @@ export function ProductWorkspace({
     <div className="flex h-full w-full">
       <WorkspaceNav active={section} onSelect={setSection} onBack={onBack} />
       <div className="flex flex-1 flex-col overflow-hidden">
-        <div className="border-b px-4 py-2">
+        <div className="border-b px-6 py-3">
           <span className="text-sm font-medium">{product.name}</span>
         </div>
         <div className="flex-1 overflow-hidden">

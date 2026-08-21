@@ -65,7 +65,7 @@ export function SnippetHistory({
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-80 p-0" align="start">
-        <div className="flex items-center gap-2 border-b p-2">
+        <div className="flex items-center gap-2 border-b p-3">
           <Input
             placeholder="Save current as…"
             value={name}
@@ -77,16 +77,16 @@ export function SnippetHistory({
           </Button>
         </div>
         <ScrollArea className="max-h-64">
-          <div className="flex flex-col gap-0.5 p-2">
+          <div className="flex flex-col gap-1 p-3">
             {snippets.length === 0 && (
-              <p className="px-2 py-1.5 text-sm text-muted-foreground">
+              <p className="px-3 py-2 text-sm text-muted-foreground">
                 No saved snippets yet.
               </p>
             )}
             {snippets.map((s) => (
               <div
                 key={s.id}
-                className="group flex items-center justify-between rounded-md px-2 py-1.5 text-sm hover:bg-accent"
+                className="group flex items-center justify-between rounded-md px-3 py-2 text-sm hover:bg-accent"
               >
                 <button
                   className="flex-1 truncate text-left"

@@ -34,7 +34,7 @@ export function RunResultPanel({
   return (
     <div className="flex h-full flex-col overflow-hidden border-l bg-muted/30">
       {!result && (
-        <span className="p-4 font-mono text-xs text-muted-foreground">
+        <span className="p-5 font-mono text-xs text-muted-foreground">
           Run to see output.
         </span>
       )}
@@ -47,17 +47,17 @@ export function RunResultPanel({
             srcDoc={iframeDoc(result.stdout, resolvedTheme === "dark")}
           />
         ) : (
-          <pre className="overflow-auto p-4 font-mono text-xs whitespace-pre-wrap">
+          <pre className="overflow-auto p-5 font-mono text-xs whitespace-pre-wrap">
             {result.stdout}
           </pre>
         ))}
       {result?.stderr && (
-        <pre className="overflow-auto p-4 font-mono text-xs whitespace-pre-wrap text-destructive">
+        <pre className="overflow-auto p-5 font-mono text-xs whitespace-pre-wrap text-destructive">
           {result.stderr}
         </pre>
       )}
       {result && !result.stdout && !result.stderr && (
-        <span className="p-4 font-mono text-xs text-muted-foreground">
+        <span className="p-5 font-mono text-xs text-muted-foreground">
           (no output — exit {result.success ? "0" : "non-zero"})
         </span>
       )}

@@ -49,7 +49,7 @@ export function LogViewer({ product }: { product: Product }) {
 
   return (
     <div className="flex h-full flex-col">
-      <div className="flex items-center justify-between border-b px-4 py-2">
+      <div className="flex items-center justify-between border-b px-6 py-3">
         <span className="text-xs text-muted-foreground">
           storage/logs — refreshing every {POLL_INTERVAL_MS / 1000}s
         </span>
@@ -57,7 +57,7 @@ export function LogViewer({ product }: { product: Product }) {
           <RefreshCw className="h-4 w-4" />
         </Button>
       </div>
-      <div ref={containerRef} className="flex-1 overflow-auto p-4 font-mono text-xs">
+      <div ref={containerRef} className="flex-1 overflow-auto p-5 font-mono text-xs">
         {error && <p className="text-destructive">{error}</p>}
         {!error &&
           text?.split("\n").map((line, i) => (

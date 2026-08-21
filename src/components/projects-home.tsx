@@ -38,12 +38,12 @@ export function ProjectsHome({
   }
 
   return (
-    <div className="mx-auto flex h-full w-full max-w-4xl flex-col p-8">
-      <div className="mb-6 flex items-center justify-between">
+    <div className="mx-auto flex h-full w-full max-w-4xl flex-col p-10">
+      <div className="mb-8 flex items-center justify-between">
         <h1 className="text-lg font-semibold">Anvil</h1>
         <SettingsDialog />
       </div>
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+      <div className="grid grid-cols-2 gap-5 sm:grid-cols-3">
         {products.map((p) => (
           <Card
             key={p.id}
@@ -89,7 +89,7 @@ export function ProjectsHome({
           onAdded={onAdded}
           trigger={
             <Card className="flex cursor-pointer items-center justify-center border-dashed text-muted-foreground transition-colors hover:border-primary hover:text-foreground">
-              <CardContent className="flex flex-col items-center gap-2 py-8">
+              <CardContent className="flex flex-col items-center gap-2 py-10">
                 <Plus className="h-5 w-5" />
                 <span className="text-sm">Add new project</span>
               </CardContent>

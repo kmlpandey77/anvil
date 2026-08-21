@@ -80,7 +80,7 @@ export function AddProductDialog({
         <DialogHeader>
           <DialogTitle>Add product</DialogTitle>
         </DialogHeader>
-        <div className="space-y-4">
+        <div className="space-y-5">
           <div className="space-y-2">
             <Label htmlFor="path">Project path</Label>
             <div className="flex gap-2">

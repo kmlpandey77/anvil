@@ -69,7 +69,7 @@
       "refersTo": "button-primary",
       "description": "Default action button — vivid Ray Orange, dark-violet text (crisper than white at this lightness/chroma).",
       "html": "<button class=\"ds-btn-primary\">Run</button>",
-      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; height: 32px; padding: 0 10px; gap: 6px; border-radius: 16px; border: none; background: oklch(0.72 0.19 42); color: oklch(0.16 0.032 296); font-family: 'Geist Variable', sans-serif; font-size: 14px; font-weight: 500; transition: background-color 0.15s, opacity 0.15s; } .ds-btn-primary:hover { opacity: 0.85; } .ds-btn-primary:focus-visible { outline: none; box-shadow: 0 0 0 3px oklch(0.72 0.19 42 / 0.5); } .ds-btn-primary:disabled { opacity: 0.5; }"
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; height: 32px; padding: 0 14px; gap: 6px; border-radius: 0; border: none; background: oklch(0.72 0.19 42); color: oklch(0.16 0.032 296); font-family: 'Geist Variable', sans-serif; font-size: 14px; font-weight: 500; transition: background-color 0.15s, opacity 0.15s; } .ds-btn-primary:hover { opacity: 0.85; } .ds-btn-primary:focus-visible { outline: none; box-shadow: 0 0 0 3px oklch(0.72 0.19 42 / 0.5); } .ds-btn-primary:disabled { opacity: 0.5; }"
     },
     {
       "name": "Card",
@@ -77,7 +77,7 @@
       "refersTo": "card",
       "description": "Flat-ground panel with a real offset-blur shadow (The Real Depth Rule) instead of the old ring-only treatment.",
       "html": "<div class=\"ds-card\"><div class=\"ds-card-title\">cci-backend</div><div class=\"ds-card-desc\">/home/user/projects/cci-backend</div></div>",
-      "css": ".ds-card { display: flex; flex-direction: column; gap: 16px; padding: 16px; border-radius: 22.4px; background: oklch(0.21 0.04 296); box-shadow: 0 10px 28px -8px oklch(0.05 0.03 296 / 0.55), 0 2px 10px -3px oklch(0.05 0.03 296 / 0.4); font-family: 'Geist Variable', sans-serif; } .ds-card-title { font-size: 16px; font-weight: 500; line-height: 1.375; color: oklch(0.96 0.012 296); } .ds-card-desc { font-size: 12px; font-family: ui-monospace, Menlo, Consolas, monospace; color: oklch(0.7 0.035 296); }"
+      "css": ".ds-card { display: flex; flex-direction: column; gap: 20px; padding: 24px; border-radius: 0; background: oklch(0.21 0.04 296); box-shadow: 0 10px 28px -8px oklch(0.05 0.03 296 / 0.55), 0 2px 10px -3px oklch(0.05 0.03 296 / 0.4); font-family: 'Geist Variable', sans-serif; } .ds-card-title { font-size: 16px; font-weight: 500; line-height: 1.375; color: oklch(0.96 0.012 296); } .ds-card-desc { font-size: 12px; font-family: ui-monospace, Menlo, Consolas, monospace; color: oklch(0.7 0.035 296); }"
     },
     {
       "name": "Status Dot",
@@ -91,7 +91,7 @@
       "kind": "custom",
       "description": "Ring-only, no shadow — the one elevation treatment kept unchanged from the prior system, since the dimmed backdrop already carries depth.",
       "html": "<div class=\"ds-modal-backdrop\"><div class=\"ds-modal\"><div class=\"ds-modal-title\">Settings</div></div></div>",
-      "css": ".ds-modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.10); backdrop-filter: blur(2px); display: flex; align-items: center; justify-content: center; } .ds-modal { width: 100%; max-width: 384px; padding: 16px; border-radius: 22.4px; background: oklch(0.21 0.04 296); box-shadow: 0 0 0 1px oklch(1 0 0 / 0.10); } .ds-modal-title { font-size: 16px; font-weight: 500; color: oklch(0.96 0.012 296); }"
+      "css": ".ds-modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.10); backdrop-filter: blur(2px); display: flex; align-items: center; justify-content: center; } .ds-modal { width: 100%; max-width: 384px; padding: 24px; border-radius: 0; background: oklch(0.21 0.04 296); box-shadow: 0 0 0 1px oklch(1 0 0 / 0.10); } .ds-modal-title { font-size: 16px; font-weight: 500; color: oklch(0.96 0.012 296); }"
     }
   ],
   "narrative": {
@@ -111,7 +111,8 @@
       "Do spend orange only on the one live/primary/actionable thing per screen.",
       "Do give any new in-flow surface a real offset-blur shadow from --shadow-ambient, not a flat ring.",
       "Do keep modals ring-only — their backdrop is already their depth cue.",
-      "Do use the softer 16px-base radius scale for new surfaces.",
+      "Do keep new surfaces square (--radius: 0) — the full pill stays reserved for the scrollbar thumb and status dot.",
+      "Do give distinct groups room to breathe (the 4/12/20/32px spacing scale) — keep a single control's own internals tight.",
       "Do switch to the monospace stack for code-like content and keep everything else in Geist Variable."
     ],
     "donts": [
@@ -119,7 +120,8 @@
       "Don't give a modal a shadow; that's the one surface this world deliberately keeps flat.",
       "Don't render Artisan (or any command-output) stdout as HTML.",
       "Don't reach for pure black/white/gray anywhere — every neutral carries the violet hue.",
-      "Don't design for phone/tablet breakpoints — this is a native desktop window."
+      "Don't design for phone/tablet breakpoints — this is a native desktop window.",
+      "Don't round a card, button, dialog, popover, select, or input corner — --radius: 0 already zeroes all of them."
     ]
   }
 }

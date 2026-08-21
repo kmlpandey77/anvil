@@ -34,7 +34,7 @@ export function SettingsDialog() {
         <DialogHeader>
           <DialogTitle>Settings</DialogTitle>
         </DialogHeader>
-        <div className="space-y-4">
+        <div className="space-y-5">
           <div className="space-y-2">
             <Label>Theme</Label>
             <Select value={theme} onValueChange={setTheme}>

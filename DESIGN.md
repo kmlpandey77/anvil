@@ -29,16 +29,16 @@ typography:
     fontWeight: 400
     lineHeight: "1.4"
 rounded:
-  sm: "9.6px"
-  md: "12.8px"
-  lg: "16px"
-  xl: "22.4px"
+  sm: "0px"
+  md: "0px"
+  lg: "0px"
+  xl: "0px"
   full: "9999px"
 spacing:
   xs: "4px"
-  sm: "8px"
-  md: "16px"
-  lg: "24px"
+  sm: "12px"
+  md: "20px"
+  lg: "32px"
 components:
   button-primary:
     backgroundColor: "{colors.ray-orange}"
@@ -60,12 +60,12 @@ components:
     textColor: "{colors.violet-paper}"
     rounded: "{rounded.lg}"
     height: "32px"
-    padding: "4px 10px"
+    padding: "4px 12px"
   card:
     backgroundColor: "{colors.violet-card}"
     textColor: "{colors.violet-paper}"
     rounded: "{rounded.xl}"
-    padding: "16px"
+    padding: "24px"
 ---
 
 # Design System: Anvil
@@ -129,7 +129,11 @@ The system's biggest material change. The previous system was flat by design (a 
 
 ## Shapes
 
-Radius grew softer across the board: base radius moved from 10px to 16px (`--radius: 0.875rem`), scaling the existing sm/md/lg/xl steps up with it (≈9.6 / 12.8 / 16 / 22.4px). A `full` (9999px) pill radius joins the scale for the first time, used by the scrollbar thumb. Borders stay 1px hairlines — the softer corners carry the "modern" read, not thicker strokes.
+Corners went sharp: base radius dropped to `0` (`--radius: 0px` in `index.css`), which zeroes the entire derived sm/md/lg/xl/2xl scale in one place — cards, buttons, dialogs, popovers, selects, and inputs all square off together, no per-component override needed. Borders stay 1px hairlines. The one shape carried over unchanged is the `full` (9999px) pill — not a corner radius in the aesthetic sense being flattened here, but a distinct capsule shape used only where it's functional: the scrollbar thumb and the status dot.
+
+## Spacing
+
+Comfort pass: the working scale moved from a tight 4/8/16/24px rhythm to a more generous 4/12/20/32px one. In practice this means section padding and header bars (`px-6 py-3` rather than `px-4 py-2`), card interiors (`--card-spacing` at 24px, was 16px), dialog/popover padding (`p-6`/`p-4`, was `p-4`/`p-2.5`), and list-row padding across Artisan's command list and Tinker's snippet history all grew a step. Tight, single-purpose groupings — an icon next to its label, a button's own internal padding — stayed close on purpose; comfort spends its room on separation between distinct groups, not inside them.
 
 ## Components
 
@@ -147,7 +151,8 @@ The code editor (Tinker, `.env`) now runs two custom Monaco themes, `ray-dark` /
 - **Do** spend orange only on the one live/primary/actionable thing per screen (The One Accent Rule).
 - **Do** give any new in-flow surface (a card, a panel) a real offset-blur shadow from `--shadow-ambient`, not a flat ring (The Real Depth Rule).
 - **Do** keep modals ring-only — their backdrop is already their depth cue.
-- **Do** use the softer 16px-base radius scale for new surfaces; a 10px-feeling corner will look like it belongs to the old system.
+- **Do** keep new surfaces square (`--radius: 0`) — a rounded corner will look like it belongs to the old system. The `full` pill stays reserved for the scrollbar thumb and status dot, not general use.
+- **Do** give distinct groups room to breathe (the 4/12/20/32px spacing scale) — reserve tight spacing for a single control's own internals, not for separating unrelated sections.
 - **Do** switch to the monospace stack for code-like content and keep everything else in Geist Variable.
 
 ### Don't:
@@ -156,3 +161,4 @@ The code editor (Tinker, `.env`) now runs two custom Monaco themes, `ray-dark` /
 - **Don't** render Artisan (or any command-output) stdout as HTML — only Tinker's dump output is sandboxed and safe to interpret as markup.
 - **Don't** reach for pure black/white/gray anywhere — every neutral in this system carries the violet hue, even at near-black or near-white lightness.
 - **Don't** design for phone/tablet breakpoints — this is a native desktop window, not a public site.
+- **Don't** round a card, button, dialog, popover, select, or input corner — the `--radius: 0` token already zeroes all of them; a one-off `rounded-*` override on a new component would be the one surface that doesn't match.
