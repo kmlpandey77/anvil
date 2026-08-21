@@ -122,13 +122,38 @@ fn wrap_snippet(code: &str) -> String {
     }
 }
 
-#[tauri::command]
-fn run_snippet(app: AppHandle, product_id: String, code: String) -> Result<RunResult, String> {
-    let products = read_products(&app)?;
-    let product = products
+fn find_product(app: &AppHandle, product_id: &str) -> Result<Product, String> {
+    read_products(app)?
         .into_iter()
         .find(|p| p.id == product_id)
-        .ok_or_else(|| "Product not found.".to_string())?;
+        .ok_or_else(|| "Product not found.".to_string())
+}
+
+fn exec_php(product: &Product, script: &str) -> Result<RunResult, String> {
+    let project_path = PathBuf::from(&product.path);
+    let mut tmp = std::env::temp_dir();
+    tmp.push(format!("laravel-toolkit-{}.php", new_id()));
+    fs::write(&tmp, script).map_err(|e| e.to_string())?;
+
+    let result = Command::new(&product.php_binary)
+        .arg(&tmp)
+        .current_dir(&project_path)
+        .output();
+
+    let _ = fs::remove_file(&tmp);
+
+    let output = result.map_err(|e| format!("failed to run '{}': {e}", product.php_binary))?;
+
+    Ok(RunResult {
+        stdout: String::from_utf8_lossy(&output.stdout).to_string(),
+        stderr: String::from_utf8_lossy(&output.stderr).to_string(),
+        success: output.status.success(),
+    })
+}
+
+#[tauri::command]
+fn run_snippet(app: AppHandle, product_id: String, code: String) -> Result<RunResult, String> {
+    let product = find_product(&app, &product_id)?;
 
     let project_path = PathBuf::from(&product.path);
     let autoload = project_path.join("vendor/autoload.php");
@@ -153,29 +178,99 @@ fn run_snippet(app: AppHandle, product_id: String, code: String) -> Result<RunRe
         wrap_snippet(&code),
     );
 
-    let mut tmp = std::env::temp_dir();
-    tmp.push(format!("laravel-toolkit-{}.php", new_id()));
-    fs::write(&tmp, &script).map_err(|e| e.to_string())?;
+    exec_php(&product, &script)
+}
 
-    let result = Command::new(&product.php_binary)
-        .arg(&tmp)
-        .current_dir(&project_path)
-        .output();
+#[derive(Debug, Deserialize)]
+struct Psr4Dump {
+    psr4: std::collections::HashMap<String, Vec<String>>,
+    functions: Vec<String>,
+}
 
-    let _ = fs::remove_file(&tmp);
+#[derive(Debug, Serialize)]
+struct Symbols {
+    classes: Vec<String>,
+    functions: Vec<String>,
+}
 
-    let output = result.map_err(|e| format!("failed to run '{}': {e}", product.php_binary))?;
+const SYMBOL_SCAN_MAX_FILES: usize = 8000;
+const SYMBOL_SCAN_SKIP_DIRS: &[&str] = &["vendor", "node_modules", ".git", "storage"];
 
-    Ok(RunResult {
-        stdout: String::from_utf8_lossy(&output.stdout).to_string(),
-        stderr: String::from_utf8_lossy(&output.stderr).to_string(),
-        success: output.status.success(),
+// Walks a PSR-4 namespace root, deriving `Namespace\Sub\Class` for every .php
+// file found. Depth-first, capped at SYMBOL_SCAN_MAX_FILES so a huge or
+// symlink-looped directory can't hang the scan.
+fn collect_classes(dir: &PathBuf, namespace_prefix: &str, out: &mut Vec<String>) {
+    if out.len() >= SYMBOL_SCAN_MAX_FILES {
+        return;
+    }
+    let Ok(entries) = fs::read_dir(dir) else { return };
+    for entry in entries.flatten() {
+        if out.len() >= SYMBOL_SCAN_MAX_FILES {
+            return;
+        }
+        let path = entry.path();
+        let Some(file_name) = path.file_name().and_then(|n| n.to_str()) else { continue };
+        if path.is_dir() {
+            if SYMBOL_SCAN_SKIP_DIRS.contains(&file_name) || file_name.starts_with('.') {
+                continue;
+            }
+            let sub_namespace = format!("{namespace_prefix}{file_name}\\");
+            collect_classes(&path, &sub_namespace, out);
+        } else if let Some(stem) = file_name.strip_suffix(".php") {
+            out.push(format!("{namespace_prefix}{stem}"));
+        }
+    }
+}
+
+#[tauri::command]
+fn list_symbols(app: AppHandle, product_id: String) -> Result<Symbols, String> {
+    let product = find_product(&app, &product_id)?;
+
+    let project_path = PathBuf::from(&product.path);
+    let autoload = project_path.join("vendor/autoload.php");
+    if !autoload.is_file() {
+        return Err(format!(
+            "vendor/autoload.php not found — run composer install in {}",
+            product.path
+        ));
+    }
+
+    // vendor/autoload.php just registers Composer's PSR-4 autoloader and
+    // returns the ClassLoader — it does not boot Laravel or touch the DB.
+    let script = format!(
+        "<?php\n$loader = require {:?};\necho json_encode(['psr4' => $loader->getPrefixesPsr4(), 'functions' => get_defined_functions()['internal']]);\n",
+        autoload.to_string_lossy(),
+    );
+
+    let result = exec_php(&product, &script)?;
+    if !result.success {
+        return Err(if result.stderr.is_empty() { result.stdout } else { result.stderr });
+    }
+
+    let dump: Psr4Dump = serde_json::from_str(&result.stdout)
+        .map_err(|e| format!("could not parse autoloader output: {e}"))?;
+
+    let mut classes = Vec::new();
+    'prefixes: for (namespace, dirs) in dump.psr4 {
+        for dir in dirs {
+            if classes.len() >= SYMBOL_SCAN_MAX_FILES {
+                break 'prefixes;
+            }
+            collect_classes(&PathBuf::from(dir), &namespace, &mut classes);
+        }
+    }
+    classes.sort();
+    classes.dedup();
+
+    Ok(Symbols {
+        classes,
+        functions: dump.functions,
     })
 }
 
 #[cfg(test)]
 mod tests {
-    use super::wrap_snippet;
+    use super::{collect_classes, wrap_snippet};
 
     #[test]
     fn wraps_simple_expressions() {
@@ -193,6 +288,23 @@ mod tests {
         assert_eq!(wrap_snippet("$x = 1;\n$y = 2;"), "$x = 1;\n$y = 2;");
         assert_eq!(wrap_snippet("if (true) { echo 1; }"), "if (true) { echo 1; }");
     }
+
+    #[test]
+    fn collects_classes_from_nested_dirs_and_skips_vendor() {
+        let dir = std::env::temp_dir().join(format!("laravel-toolkit-test-{}", super::new_id()));
+        std::fs::create_dir_all(dir.join("Models")).unwrap();
+        std::fs::create_dir_all(dir.join("vendor")).unwrap();
+        std::fs::write(dir.join("Models/User.php"), "<?php").unwrap();
+        std::fs::write(dir.join("Helper.php"), "<?php").unwrap();
+        std::fs::write(dir.join("vendor/Ignored.php"), "<?php").unwrap();
+
+        let mut out = Vec::new();
+        collect_classes(&dir, "App\\", &mut out);
+        out.sort();
+
+        assert_eq!(out, vec!["App\\Helper", "App\\Models\\User"]);
+        std::fs::remove_dir_all(&dir).unwrap();
+    }
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -204,7 +316,8 @@ pub fn run() {
             list_products,
             add_product,
             remove_product,
-            run_snippet
+            run_snippet,
+            list_symbols
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
