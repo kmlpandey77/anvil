@@ -11,7 +11,7 @@ Tauri + React + shadcn/ui desktop app for running PHP/Laravel snippets against r
 
 5. **Artisan runner** — list the project's real `artisan` commands and run one, output shown the same way as a snippet. ✅ shipped
 6. **Log tailing** — poll `storage/logs/*.log` and show the tail, while the Logs tab is open. ✅ shipped
-7. **DB/table browser** — run raw SQL through the project's configured Laravel DB connection, results rendered as a table instead of a `var_dump` blob. 🚧 in progress
+7. **DB/table browser** — run raw SQL through the project's configured Laravel DB connection, results rendered as a table instead of a `var_dump` blob. ✅ shipped
 8. **Snippet history** — save/load/delete named snippets per product. 🚧 in progress
 
 Explicitly out of scope: SSH/remote/Docker connections, multi-environment products, XDebug, AI chat, team/sharing, and any Laravel-version compatibility checker (dropped — not needed). Add later only if actually needed.
@@ -46,6 +46,12 @@ Same "reuse the real project" philosophy as running code — no bundled PHP lang
 - Frontend trigger (`registerPhpCompletionProviders` in `src/lib/symbols.ts`, registered against Monaco's `languages.registerCompletionItemProvider('php', ...)`): matches `Class::` (resolves `Class` against known project classes by exact/short-name, else passes through as-is so fully-qualified vendor classes like `\Illuminate\Support\Str` still work) or `$var->` (resolved only via a backward regex scan for `$var = new ClassName(` earlier in the same buffer — not real type inference, so `User::first()->` chains won't resolve).
 - Deliberately not built this pass: parsing ide-helper's separate `_ide_helper.php`/`_ide_helper_models.php` helper files (a different, more complex nested-namespace format than inline docblocks) — would add Facade method completion (`Route::`, `DB::`) but wasn't worth the extra parser yet. Natural next step if facades turn out to matter.
 
+### Artisan runner, log tailing, DB browser — shipped
+
+- `list_artisan_commands`/`run_artisan_command`: shell out to the project's own `artisan` (`list --format=json` is Symfony Console's built-in JSON descriptor, verified against a real `symfony/console` app before trusting the shape). `run_artisan_command` takes freeform args (split on whitespace client-side).
+- `read_log_tail`: picks the most recently modified `*.log` in `storage/logs` (default single file or the "daily" driver's rotated files), seeks to the last 100KB rather than loading the whole file. Frontend polls every 2s while the Logs tab is mounted — Radix `Tabs` unmounts inactive content by default, so polling stops on its own when you switch away.
+- `run_query`: boots the Kernel like `run_snippet`, runs `DB::select($sql)`, returns rows as `{ columns, rows }` for a real `<Table>` instead of a `var_dump` blob. `serde_json`'s `preserve_order` feature is enabled — its `Map` is a `BTreeMap` by default (alphabetical!) which would silently reorder columns away from the SELECT order; caught by a unit test before it shipped. Guarded (client message, not a real security boundary) to SQL starting with `select` — anything else belongs in the Tinker tab.
+
 ## Tech stack
 
 - **Shell**: Tauri v2 (Rust backend, plain `std::process::Command` for spawning `php` — no shell plugin needed, we're not running arbitrary shell commands).
@@ -77,7 +83,7 @@ type Product = {
 6. ✅ **Settings**: theme (light/dark/system via `next-themes`, already a shadcn-init dependency) + editor font size/family, persisted in `localStorage` (per-viewer UI preference, not project data — doesn't belong in the Rust-backed `products.json`).
 7. ✅ **Artisan runner**: `list_artisan_commands` (`php artisan list --format=json`) + `run_artisan_command`, a new "Artisan" tab.
 8. ✅ **Log tailing**: `read_log_tail` (find newest `storage/logs/*.log`, read its tail), frontend polls every ~2s while the "Logs" tab is open — no filesystem-watcher plugin, polling is simpler and good enough for a log viewer.
-9. 🚧 **DB/table browser**: `run_query` (boots the Kernel like `run_snippet`, runs `DB::select($sql)`, returns rows as JSON), a new "Database" tab renders them as an actual table. SQL only (no arbitrary PHP) — that's the point of the tab.
+9. ✅ **DB/table browser**: `run_query` (boots the Kernel like `run_snippet`, runs `DB::select($sql)`, returns rows as JSON), a new "Database" tab renders them as an actual table. SQL only (no arbitrary PHP) — that's the point of the tab.
 10. 🚧 **Snippet history**: `snippets.json` in the app data dir (same pattern as `products.json`), keyed by product — save/load/delete named snippets from the Tinker tab.
 11. **Polish** (only if actually needed after using it): keyboard shortcuts beyond ⌘Enter, richer error states.
 
